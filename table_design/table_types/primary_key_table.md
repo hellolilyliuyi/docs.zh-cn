@@ -141,4 +141,4 @@ PROPERTIES (
 ## 下一步
 
 建表完成后，您可以创建多种导入作业，导入数据至表中。具体导入方式，请参见[导入总览](../../loading/Loading_intro.md)。
-您可以通过[导入](../../loading/Load_to_Primary_Key_tables.md)和执行 DML 语句（ [UPDATE](../../sql-reference/sql-statements/data-manipulation/UPDATE.md) 和 [DELETE](../../sql-reference/sql-statements/data-manipulation/DELETE.md)）对主键模型的表进行数据更新，并且更新操作是原子性的。
+如果需要更新主键模型表的数据，您可以通过[导入](../../loading/Load_to_Primary_Key_tables.md)和执行 DML 语句（ [UPDATE](../../sql-reference/sql-statements/data-manipulation/UPDATE.md) 和 [DELETE](../../sql-reference/sql-statements/data-manipulation/DELETE.md)）实现，并且更新操作是原子性的。
