@@ -28,11 +28,11 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT]
 | ------------------------ | ------------------------------------------------------------ |
 | PartitionId              | 分区 ID。                                                    |
 | PartitionName            | 分区名。                                                     |
-| VisibleVersion           | 最后一次成功导入的版本号。每次 load 成功，则版本号加 1。   |
+| VisibleVersion           | 最后一次成功导入的版本号。每次 导入 成功，则版本号加 1。   |
 | VisibleVersionTime       | 最后一次成功导入的时间。                                   |
 | VisibleVersionHash       | 最后一次成功导入的版本号的哈希值。                         |
 | State                    | 分区的状态。固定为 `Normal`。                                |
-| PartitionKey             | 分区列。                                                     |
+| PartitionKey             | 分区键，由一个活或多个分区列组成。                                                     |
 | Range                    | Range 分区的范围，为左闭右开区间。                           |
 | DistributionKey          | 分区中数据进行哈希分桶时的分桶键。                           |
 | Buckets                  | 分区中的分桶数量。                                           |
@@ -46,10 +46,10 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT]
 
 ## 示例
 
-1. 查询指定数据库（例如`test`）下指定表（例如 `site_access`）的所有正式分区信息：
+1. 查询指定数据库（例如 `test`）下指定表（例如 `site_access`）的所有正式分区信息：
 
     ```SQL
-    MySQL [test]> show partitions from test.site_access\G
+    MySQL > show partitions from test.site_access\G
     *************************** 1. row ***************************
                 PartitionId: 20990
             PartitionName: p2019 
