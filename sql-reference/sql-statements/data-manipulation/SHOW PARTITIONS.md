@@ -38,7 +38,7 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT]
 | Buckets                  | 分区中的分桶数量。                                           |
 | ReplicationNum           | 分区中每个 Tablet 的副本数量。                                |
 | StorageMedium            | 数据存储介质。返回值为 `HDD` 表示机械硬盘，返回值为 `SSD` 表示固态硬盘。           |
-| CooldownTime             | 数据降冷时间。如果一开始数据的存储介质为 SSD ，在该时间点之后，数据从存储介质 SSD  降冷到 HDD。 |
+| CooldownTime             | 数据降冷时间。如果一开始数据的存储介质为 SSD ，在该时间点之后，数据存储介质会从 SSD 切换为 HDD。 格式："yyyy-MM-dd HH:mm:ss"。|
 | LastConsistencyCheckTime | 最后一次一致性检查的时间。`NULL` 表示没有进行一致性检查。    |
 | DataSize                 | 分区中数据大小。                                             |
 | IsInMemory               | 该分区数据是否全部存储在内存中。                             |
