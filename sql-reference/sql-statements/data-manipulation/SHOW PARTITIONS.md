@@ -28,7 +28,7 @@ SHOW [TEMPORARY] PARTITIONS FROM [db_name.]table_name [WHERE] [ORDER BY] [LIMIT]
 | ------------------------ | ------------------------------------------------------------ |
 | PartitionId              | 分区 ID。                                                    |
 | PartitionName            | 分区名。                                                     |
-| VisibleVersion           | 最后一次成功导入的版本号。每次 导入 成功，则版本号加 1。   |
+| VisibleVersion           | 最后一次成功导入的版本号。每次成功导入，则版本号加 1。   |
 | VisibleVersionTime       | 最后一次成功导入的时间。                                   |
 | VisibleVersionHash       | 最后一次成功导入的版本号的哈希值。                         |
 | State                    | 分区的状态。固定为 `Normal`。                                |
