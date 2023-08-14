@@ -242,7 +242,7 @@ Kubernetes 还支持使用 `behavior`，根据业务场景定制扩缩容行为�
       memory: 4Gi
       #when you use autoscalingPolicy, it is recommended that replicas removed from manifests.
     autoScalingPolicy: # auto-scaling policy of CN cluster
-            maxReplicas: 10 #  CN 数量的上限 10
+      maxReplicas: 10 #  CN 数量的上限 10
       minReplicas: 1 # CN 数量的下限 1
       hpaPolicy:
         metrics: # 资源指标
