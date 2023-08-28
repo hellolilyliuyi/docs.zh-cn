@@ -10,36 +10,15 @@
 
 不过在一些特殊场景下，比如历史数据按月划分分区、最近数据按天划分分区，则需要采用 [Range 分区](./Data_distribution.md#range-分区)创建分区。 
 
-### 语法
-
-```sql
-PARTITION BY expression
-...
-[ PROPERTIES( 'partition_live_number' = 'xxx' ) ]
-
-expression ::=
-    { date_trunc ( <time_unit> , <partition_column> ) |
-      time_slice ( <partition_column> , INTERVAL <N> <time_unit> [ , boundary ] ) }
-```
-
-### 参数解释
-
-| 参数                    | 是否必填 | 说明                                                         |
-| ----------------------- | -------- | ------------------------------------------------------------ |
-| `expression`            | 是       | 目前仅支持 [date_trunc](../sql-reference/sql-functions/date-time-functions/date_trunc) 和 [time_slice](../sql-reference/sql-functions/date-time-functions/time_slice) 函数。并且如果您使用 `time_slice` 函数，则可以不传入参数 `boundary`，因为在该场景中该参数默认且仅支持为 `floor`，不支持为 `ceil`。 |
-| `time_unit`             | 是       | 分区粒度，目前仅支持为 `hour`、`day`、`month` 或 `year`，暂时不支持为 `week`。如果分区粒度为 `hour`，则仅支持分区列为 DATETIME 类型，不支持为 DATE 类型。 |
-| `partition_column`      | 是       | 分区列。  <br> <ul><li>仅支持为日期类型（DATE 或 DATETIME），不支持为其它类型。如果使用 `date_trunc` 函数，则分区列支持为 DATE 或 DATETIME 类型。如果使用 `time_slice` 函数，则分区列仅支持为 DATETIME 类型。分区列的值支持为 `NULL`。</li><li> 如果分区列是 DATE 类型，则范围支持为 [0000-01-01 ~ 9999-12-31]。如果分区列是 DATETIME 类型，则范围支持为 [0000-01-01 01:01:01 ~ 9999-12-31 23:59:59]。</li><li> 目前仅支持指定一个分区列，不支持指定多个分区列。</li></ul> |
-| `partition_live_number` | 否       | 保留最近多少数量的分区。最近是指分区按时间的先后顺序进行排序，以**当前时间**为基准，然后从后往前数指定个数的分区进行保留，其余（更早的）分区会被删除。后台会定时调度任务来管理分区数量，调度间隔可以通过 FE 动态参数 `dynamic_partition_check_interval_seconds` 配置，默认为 600 秒，即 10 分钟。假设当前为 2023 年 4 月 4 日，`partition_live_number` 设置为 `2`，分区包含 `p20230401`、`p20230402`、`p20230403`、`p20230404`，则分区 `p20230403`、`p20230404` 会保留，其他分区会删除。如果导入了脏数据，比如未来时间 4 月 5 日和 6 日的数据，导致分区包含 `p20230401`、`p20230402`、`p20230403`、`p20230404`、`p20230405`、`p20230406`，则分区 `p20230403`、`p20230404`、`p20230405`、`p20230406` 会保留，其他分区会删除。|
-
 ### 使用说明
 
 - 在导入的过程中 StarRocks 根据导入数据已经自动创建了一些分区，但是由于某些原因导入作业最终失败，则在当前版本中，已经自动创建的分区并不会由于导入失败而自动删除。
 - StarRocks 自动创建分区数量上限默认为 4096，由 FE 配置参数 `max_automatic_partition_number` 决定。该参数可以防止您由于误操作而创建大量分区。
 - 分区命名规则与动态分区的命名规则一致。
 
-### 示例
+### 使用方式<!--建表后是否支持-->
 
-示例一：假设您经常按天查询数据，则建表时可以使用分区表达式 `date_trunc()` ，并且设置分区列为 `event_day` ，分区粒度为 `day`，实现导入数据时自动按照数据所属日期划分分区。将同一天的数据存储在一个分区中，利用分区裁剪可以显著提高查询效率。
+示例一：假设您经常**按天**查询数据，则建表时可以使用分区表达式 `date_trunc()` ，并且设置分区列为 `event_day` ，分区粒度为 `day`，实现导入数据时自动按照数据所属日期划分分区。将同一天的数据存储在一个分区中，利用分区裁剪可以显著提高查询效率。
 
 ```SQL
 CREATE TABLE site_access1 (
@@ -73,6 +52,8 @@ mysql > SHOW PARTITIONS FROM site_access1;
 2 rows in set (0.00 sec)
 ```
 
+<!--这个示例是不是可以放到sql reference-->
+<!--
 示例二：如果您希望引入分区生命周期管理，即仅保留最近一段时间的分区，删除历史分区，则可以使用 `partition_live_number` 设置只保留最近多少数量的分区。
 
 ```SQL
@@ -90,8 +71,9 @@ PROPERTIES(
     "partition_live_number" = "3" -- 只保留最近 3 个分区
 );
 ```
+-->
 
-示例三：假设您经常按周查询数据，则建表时可以使用分区表达式 `time_slice()`，设置分区列为 `event_day`，分区粒度为七天。将一周的数据存储在一个分区中，利用分区裁剪可以显著提高查询效率。
+示例二：假设您经常**按周**查询数据，则建表时可以使用分区表达式 `time_slice()`，设置分区列为 `event_day`，分区粒度为七天。将一周的数据存储在一个分区中，利用分区裁剪可以显著提高查询效率。
 
 ```SQL
 CREATE TABLE site_access3 (
@@ -112,34 +94,13 @@ DISTRIBUTED BY HASH(event_day, site_id);
 
 不过在一些特殊场景下，比如表中包含表示城市的列，您经常按照国家和城市来查询和管理数据，希望将同属于一个国家的多个城市的数据存储在一个分区中，则需要使用 [List 分区](./list_partitioning.md)。
 
-### 语法
-
-```bnf
-PARTITION BY expression
-...
-[ PROPERTIES( 'partition_live_number' = 'xxx' ) ]
-
-expression ::=
-    ( <partition_columns> )
-    
-partition_columns ::=
-    <column>, [ <column> [,...] ]
-```
-
-### 参数解释
-
-| 参数                    | 是否必填 | 参数                                                         |
-| ----------------------- | -------- | ------------------------------------------------------------ |
-| `partition_columns`     | 是       | 分区列。<br><ul><li>支持为字符串（不支持 BINARY）、日期、整数和布尔值。不支持分区列的值为 `NULL`。</li><li> 导入后自动创建的一个分区中只能包含各分区列的一个值，如果需要包含各分区列的多值，请使用 [List 分区](./list_partitioning.md)。</li></ul> |
-| `partition_live_number` | 否       | 保留多少数量的分区。比较这些分区包含的值，定期删除值小的分区，保留值大的。后台会定时调度任务来管理分区数量，调度间隔可以通过 FE 动态参数 `dynamic_partition_check_interval_seconds` 配置，默认为 600 秒，即 10 分钟。<br>**说明**<br>如果分区列里是字符串类型的值，则比较分区名称的字典序，定期保留排在前面的分区，删除排在后面的分区。 |
-
 ### 使用说明
 
 - 在导入的过程中 StarRocks 根据导入数据已经自动创建了一些分区，但是由于某些原因导入作业最终失败，则在当前版本中，已经自动创建的分区并不会由于导入失败而自动删除。
 - StarRocks 自动创建分区数量上限默认为 4096，由 FE 配置参数 `max_automatic_partition_number` 决定。该参数可以防止您由于误操作而创建大量分区。
 - 分区命名规则：如果存在多个分区列，则不同分区列的值以下划线（_）连接。例如：存在有两个分区列 `dt` 和 `city`，均为字符串类型，导入一条数据 `2022-04-01`, `beijing`，则自动创建的分区名称为 `p20220401_beijing`。
 
-### 示例
+### 使用方式
 
 示例一：假设经常按日期范围和特定城市查询机房收费明细，则建表时可以使用分区表达式指定分区列为日期 `dt` 和城市 `city`。这样属于相同日期和城市的数据分组到同一个分区中，利用分区裁剪可以显著提高查询效率。
 
@@ -192,6 +153,8 @@ LastConsistencyCheckTime: NULL
 1 row in set (0.00 sec)
 ```
 
+ <!--move-->
+ 
 示例二：您也可以在建表时配置参数 `partition_live_number` 进行分区生命周期管理，例如指定该表只保留最近 3 个分区。
 
 ```SQL
