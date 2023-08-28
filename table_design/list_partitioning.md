@@ -12,7 +12,7 @@ List 分区适用于存储具有少量枚举值列的数据、并且经常按列
 
 **尤其适用于一个分区中需要包含各分区列的多个值的场景**。例如表中存在 `City` 列表示个体所属的城市，并且您经常按照州和城市查询和管理数据，则建表时可以使用 `City` 列作为分区列进行 List 分区，指定同属一个州的多个城市的数据分在同一分区 `PARTITION pCalifornia VALUES IN ("Los Angeles","San Francisco","San Diego")`，可以加速查询和方便数据管理。
 
-如果一个分区只需要包含各分区列的一个值，则推荐您使用[表达式分区](./expression_partitioning.md)。
+如果一个分区只需要包含各分区列的一个值，则推荐您使用[表达式分区](./expression_partitioning.md)。 
 
 **List 分区和[表达式分区](./expression_partitioning.md)的区别**
 
