@@ -256,9 +256,11 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 
 ### **partition_desc**
 
-StarRocks 支持表达式分区、Range 分区和 List 分区三种分区方式，以下会详细介绍相关语法，参数说明和示例。
+StarRocks 支持表达式分区、Range 分区和 List 分区三种分区方式，以下介绍详细的语法，参数说明和示例。
+
 > 说明
-> [表达式分区](../../../table_design/expression_partitioning.md)（推荐）、[Range 分区](../../../table_design/Data_distribution.md#range-分区) 和 [List 分区](../../../table_design/list_partitioning.md)。
+>
+> 如果 xxx xxx [表达式分区](../../../table_design/expression_partitioning.md)（推荐）、[Range 分区](../../../table_design/Data_distribution.md#range-分区) 和 [List 分区](../../../table_design/list_partitioning.md)。
 
 #### 表达式分区
 
