@@ -82,9 +82,8 @@
 - [Apache Iceberg](../data_source/catalog/iceberg_catalog.md)
 - [Apache Hudi](../data_source/catalog/hudi_catalog.md)
 - [Delta Lake](../data_source/catalog/deltalake_catalog.md)
-- [MySQL](../data_source/External_table.md#mysql-外部表)
-- [Elasticsearch](../data_source/External_table.md#elasticsearch-外部表)
-- [支持 JDBC 的数据库](../data_source/catalog/jdbc_catalog.md)
+- [MySQL 和 PostgreSQL](../data_source/catalog/jdbc_catalog.md)
+- [Elasticsearch](../data_source/catalog/elasticsearch_catalog.md)
 
 </NavBoxPartItem>
 <NavBoxPartItem title="外部系统集成​">
