@@ -488,7 +488,7 @@ DISTRIBUTED BY HASH(`id`);
       INSERT INTO `score_board` VALUES (1, 'starrocks-update', 99), (2, 'flink-update', 101);
       ```
 
-3. 在 MySQL客户端查询 StarRocks表。
+4. 在 MySQL客户端查询 StarRocks表。
 
       ```SQL
       mysql> select * from score_board;
