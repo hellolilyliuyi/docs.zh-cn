@@ -140,7 +140,7 @@ Flink connector JAR 文件的命名格式如下：
     > 如果只升级 StarRocks 或 Flink connector，sink 会自动选择  Stream Load  非事务接口实现。
 - 基于 Stream Load 非事务接口实现的 exactly-once，依赖 Flink 的 checkpoint 机制，在每次 checkpoint 时保存批数据以及其 label，在 checkpoint 后完成的第一次 invoke 中阻塞 flush 所有缓存在 state 当中的数据，以此达到精准一次。但如果 StarRocks 宕机，会导致 Flink sink stream 算子长时间阻塞，并引起 Flink 的监控报警或强制 kill。
 - 如果遇到导入停止的情况，请尝试增加 Flink 任务的内存。
-- 如果代码运行正常且 Flink 能接收到数据，但是数据写入 StarRocks 不成功时，请确认 Flink 机器能访问 BE 的 http_port 端口，这里指能 ping通集群 show backends 显示的 ip:port。举个例子：如果一台机器有外网和内网 IP，且 FE 和 BE 的 http_port均可通过外网ip:port访问，由于集群里绑定的 ip 为内网 IP，任务里 loadurl 写的 FE 外网 ip:http_port，FE会将写入任务转发给 BE 内网 ip:port，这时如果 Flink 机器 ping 不通 BE 的内网 IP，则写入失败。
+- 如果代码运行正常且 Flink 能接收到数据，但是数据写入 StarRocks 不成功时，请确认 Flink 机器能访问 BE 的 http_port 端口，这里指能 ping通集群 show backends 显示的 ip:port。举个例子：如果一台机器有外网和内网 IP，且 FE 和 BE 的 http_port均可通过外网ip:port 访问，由于集群里绑定的 ip 为内网 IP，任务里 loadurl 写的 FE 外网 ip:http_port，FE会将写入任务转发给 BE 内网 ip:port，这时如果 Flink 机器 ping 不通 BE 的内网 IP，则写入失败。
 
 ## 使用示例
 
