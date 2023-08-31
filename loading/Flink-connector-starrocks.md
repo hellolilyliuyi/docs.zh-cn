@@ -210,9 +210,9 @@ DISTRIBUTED BY HASH(id);
     DataStream<String> source = env.fromElements(records);
     
     /**
-     * Configure the connector with the required properties.
+     * Configure the Flink connector with the required properties.
      * You also need to add properties "sink.properties.format" and "sink.properties.column_separator"
-     * to tell the connector the input records are CSV-format, and the column separator is "\t".
+     * to tell the Flink connector the input records are CSV-format, and the column separator is "\t".
      * You can also use other column separators in the CSV-format records,
      * but remember to modify the "sink.properties.column_separator" correspondingly.
      */
@@ -245,9 +245,9 @@ DISTRIBUTED BY HASH(id);
     DataStream<String> source = env.fromElements(records);
     
     /** 
-     * Configure the connector with the required properties.
+     * Configure the Flink connector with the required properties.
      * You also need to add properties "sink.properties.format" and "sink.properties.strip_outer_array"
-     * to tell the connector the input records are JSON-format and to strip the outermost array structure. 
+     * to tell the Flink connector the input records are JSON-format and to strip the outermost array structure. 
      */
     StarRocksSinkOptions options = StarRocksSinkOptions.builder()
             .withProperty("jdbc-url", jdbcUrl)
@@ -293,7 +293,7 @@ DISTRIBUTED BY HASH(id);
         };
     DataStream<RowData> source = env.fromElements(records);
     
-    // Configure the connector with the required properties.
+    // Configure the Flink connector with the required properties.
     StarRocksSinkOptions options = StarRocksSinkOptions.builder()
             .withProperty("jdbc-url", jdbcUrl)
             .withProperty("load-url", loadUrl)
@@ -304,7 +304,7 @@ DISTRIBUTED BY HASH(id);
             .build();
     
     /**
-     * The connector will use a Java object array (Object[]) to represent a row to be loaded into the StarRocks table,
+     * The Flink connector will use a Java object array (Object[]) to represent a row to be loaded into the StarRocks table,
      * and each element is the value for a column.
      * You need to define the schema of the Object[] which matches that of the StarRocks table.
      */
