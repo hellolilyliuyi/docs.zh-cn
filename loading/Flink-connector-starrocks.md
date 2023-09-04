@@ -369,7 +369,7 @@ DISTRIBUTED BY HASH(id);
 
 在StarRocks中创建一个名为`test`的数据库，并在其中创建一个名为`score_board`的主键模型表。
 
-```Java
+```sql
 CREATE DATABASE `test`;
 
 CREATE TABLE `test`.`score_board`
