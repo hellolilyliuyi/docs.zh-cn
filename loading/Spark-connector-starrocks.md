@@ -10,10 +10,11 @@ StarRocks 提供 Apache Spark™ 连接器 (StarRocks Connector for Apache Spark
 |----------|-----------------|-----------|-------| ---- |
 | 1.1.1 | 3.2, 3.3, 3.4 | 2.5 及以上 | 8 | 2.12 |
 | 1.1.0    | 3.2, 3.3, 3.4   | 2.5 及以上   | 8     | 2.12 |
+
 > **注意**
 >
-> - 请查看升级Spark连接器，了解不同版本的Spark连接器之间的行为变化。
-> - 自版本1.1.1起，Spark连接器不再提供MySQL JDBC驱动程序，您需要手动将驱动程序导入到Spark的类路径中。您可以在MySQL官网或Maven中央仓库上找到该驱动程序。
+> - 了解不同版本的 Spark connector 之间的行为变化，请查看[升级 Spark connector](#升级-spark-connector)。
+> - 自 1.1.1 版本起，Spark connector 不再提供 MySQL JDBC 驱动程序，您需要将驱动程序手动放到 Spark 的类路径中。您可以在 [MySQL 官网](https://dev.mysql.com/downloads/connector/j/)或 [Maven 中央仓库](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)上找到该驱动程序。
 
 ## 获取 Connector
 
