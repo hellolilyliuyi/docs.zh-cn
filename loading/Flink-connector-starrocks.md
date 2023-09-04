@@ -8,11 +8,15 @@ Flink Connector 支持 DataStream API，Table API & SQL 和 Python API。
 
 StarRocks 提供的 Flink connector，相比于 Flink 提供的 [flink-connector-jdbc](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/jdbc/)，性能更优越和稳定。
 
+> **注意**
+>
+> 使用 Flink connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT 权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。
+
 ## 版本要求
 
 | Connector | Flink       | StarRocks  | Java | Scala      |
 | --------- | ----------- | ---------- | ---- | ---------- |
-| 1.2.7     | 1.11 ~ 1.15 | 2.5 及以上 | 8    | 2.11、2.12 |
+| 1.2.7     | 1.11 ~ 1.15 | 2.1 及以上 | 8    | 2.11、2.12 |
 
 ## 获取 Flink connector
 
@@ -24,8 +28,8 @@ StarRocks 提供的 Flink connector，相比于 Flink 提供的 [flink-connector
 
 Flink connector JAR 文件的命名格式如下：
 
-- 适用于 Flink 1.15 版本及以后的 Flink connector 命令格式为 `flink-connector-starrocks-${connector_version}_flink-${flink_version}.jar`。例如您安装了 Flink 1.15，并且想要使用 1.2.7 版本的 Flink connector，则您可以使用 `flink-connector-starrocks-1.2.7_flink-1.15.jar`。
-- 适用于 Flink 1.15 版本之前的 Flink connector 命令格式为 `flink-connector-starrocks-${connector_version}_flink-${flink_version}_${scala_version}.jar`。例如您安装了 Flink 1.14 和 Scala 2.12，并且您想要使用 1.2.7 版本的 Flink connector，您可以使用 `flink-connector-starrocks-1.2.7_flink-1.14_2.12.jar`。
+- 适用于 Flink 1.15 版本及以后的 Flink connector 命名格式为 `flink-connector-starrocks-${connector_version}_flink-${flink_version}.jar`。例如您安装了 Flink 1.15，并且想要使用 1.2.7 版本的 Flink connector，则您可以使用 `flink-connector-starrocks-1.2.7_flink-1.15.jar`。
+- 适用于 Flink 1.15 版本之前的 Flink connector 命名格式为 `flink-connector-starrocks-${connector_version}_flink-${flink_version}_${scala_version}.jar`。例如您安装了 Flink 1.14 和 Scala 2.12，并且您想要使用 1.2.7 版本的 Flink connector，您可以使用 `flink-connector-starrocks-1.2.7_flink-1.14_2.12.jar`。
 
 > **注意**
 >
@@ -85,11 +89,12 @@ Flink connector JAR 文件的命名格式如下：
 | 参数                              | 是否必填 | 默认值        | 描述                                                         |
 | --------------------------------- | -------- | ------------- | ------------------------------------------------------------ |
 | connector                         | Yes      | NONE          | 固定设置为 `starrocks`。                                     |
-| jdbc-url                          | Yes      | NONE          | 用于访问 FE 节点上的 MySQL 服务器。多个地址用英文逗号（,）分隔。格式：`jdbc:mysql://<fe_host1>:<fe_query_port1>,<fe_host2>:<fe_query_port2>`。默认端口号为 9030。 |
-| load-url                          | Yes      | NONE          | 用于访问 FE 节点上的 HTTP 服务器。多个地址用英文分号（;）分隔。格式：`<fe_host1>:<fe_http_port1>;<fe_host2>:<fe_http_port2>`。默认端口号为 8030。 |
+| jdbc-url                          | Yes      | NONE          | 用于访问 FE 节点上的 MySQL 服务器。多个地址用英文逗号（,）分隔。格式：`jdbc:mysql://<fe_host1>:<fe_query_port1>,<fe_host2>:<fe_query_port2>`。 |
+| load-url                          | Yes      | NONE          | 用于访问 FE 节点上的 HTTP 服务器。多个地址用英文分号（;）分隔。格式：`<fe_host1>:<fe_http_port1>;<fe_host2>:<fe_http_port2>`。 |
 | database-name                     | Yes      | NONE          | StarRocks 数据库名。                                         |
 | table-name                        | Yes      | NONE          | StarRocks 表名。                                             |
-| username                          | Yes      | NONE          | StarRocks 集群的用户名。该账号需具备导入至该 StarRocks 表的权限。有关用户权限的说明，请参见[用户权限](../administration/privilege_overview.md)。 |
+| username                          | Yes      | NONE          | StarRocks 集群的用户名。使用 Flink connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT 权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。
+ |
 | password                          | Yes      | NONE          | StarRocks 集群的用户密码。                                   |
 | sink.version                      | No       | AUTO          | 导入数据的接口。此参数自 Flink connector 1.2.4 开始支持。<ul><li>V1：使用 [Stream Load](./StreamLoad.md) 接口导入数据。1.2.4 之前的 Flink connector 仅支持此模式。</li> <li>V2：使用 [Stream Load 事务接口](../loading/Stream_Load_transaction_interface.md)导入数据。要求 StarRocks 版本大于等于 2.4。建议选择 V2，因为其降低内存使用，并提供了更稳定的 exactly-once 实现。</li> <li>AUTO：如果 StarRocks 版本支持 Stream Load 事务接口，将自动选择 V2，否则选择 V1。</li></ul> |
 | sink.label-prefix                 | No       | NONE          | 指定 Stream Load 使用的 label 的前缀。                       |
@@ -182,9 +187,9 @@ DISTRIBUTED BY HASH(id);
     ./bin/sql-client.sh
     ```
 
-- 在 Flink SQL 客户端**，**创建一个表 `score_board`，并且插入数据。 注意，如果您想将数据导入到 StarRocks 主键模型表中，您必须在 Flink 表的 DDL 中定义主键。对于其他类型的 StarRocks 表，这是可选的。
+- 在 Flink SQL 客户端，创建一个表 `score_board`，并且插入数据。 注意，如果您想将数据导入到 StarRocks 主键模型表中，您必须在 Flink 表的 DDL 中定义主键。对于其他类型的 StarRocks 表，这是可选的。
 
-    ```Bash
+    ```sql
     CREATE TABLE `score_board` (
         `id` INT,
         `name` STRING,
@@ -529,7 +534,7 @@ DISTRIBUTED BY HASH(`id`);
    因为表中的 `visit_user_id` 列是`BIGINT`类型，我们希望将此列的数据导入到StarRocks表中的`visit_users`列，该列是`BITMAP`类型。因此，在定义表的 DDL 时，需要注意以下几点：
 
    - 由于 Flink 不支持 `BITMAP` 类型，您需要将 `visit_user_id` 列定义为`BIGINT`类型，以代表StarRocks表中的 `visit_users` 列。
-   - 您需要将选项 `sink.properties.columns` 设置为`page_id,visit_date,user_id,visit_users=to_bitmap(visit_user_id)`，以告诉 Flink connector 如何将该表的列和 StarRocks 表的列进行映射，并且还需要使用 `to_bitmap` 函数，将`BIGINT` 类型 `visit_users` 列的数据转换为 `BITMAP`类型。
+   - 您需要将选项 `sink.properties.columns` 设置为`page_id,visit_date,user_id,visit_users=to_bitmap(visit_user_id)`，以告诉 Flink connector 如何将该表的列和 StarRocks 表的列进行映射，并且还需要使用 `to_bitmap` 函数，将`BIGINT` 类型 `visit_user_id` 列的数据转换为 `BITMAP`类型。
 
       ```SQL
       CREATE TABLE `page_uv` (
