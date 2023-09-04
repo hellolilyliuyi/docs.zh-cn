@@ -4,6 +4,10 @@ StarRocks 提供 Apache Spark™ 连接器 (StarRocks Connector for Apache Spark
 基本原理是对数据攒批后，通过 [Stream Load](./StreamLoad.md) 批量导入StarRocks。Connector 导入数据基于Spark DataSource V2 实现，
 可以通过 Spark DataFrame 或 Spark SQL 创建 DataSource，支持 Batch 和 Structured Streaming。
 
+> **注意**
+>
+> 使用 Spark connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT 权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。
+
 ## 版本要求
 
 | Connector | Spark           | StarRocks | Java  | Scala |
@@ -13,7 +17,6 @@ StarRocks 提供 Apache Spark™ 连接器 (StarRocks Connector for Apache Spark
 
 > **注意**
 >
-> - 使用 Spark connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT  权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。
 > - 了解不同版本的 Spark connector 之间的行为变化，请查看[升级 Spark connector](#升级-spark-connector)。
 > - 自 1.1.1 版本起，Spark connector 不再提供 MySQL JDBC 驱动程序，您需要将驱动程序手动放到 Spark 的类路径中。您可以在 [MySQL 官网](https://dev.mysql.com/downloads/connector/j/)或 [Maven 中央仓库](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)上找到该驱动程序。
 
