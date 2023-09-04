@@ -466,14 +466,14 @@ DISTRIBUTED BY HASH(`id`);
 1. 在 MySQL 客户端中向 StarRocks 表中插入两行数据。
 
    ```SQL
-   mysql> INSERT INTO `score_board` VALUES (1, 'starrocks', 100), (2, 'flink', 100);
+   mysql> INSERT INTO `score_board` VALUES (1, 'starrocks', 100), (2, 'spark', 100);
 
    mysql> select * from score_board;
    +------+-----------+-------+
    | id   | name      | score |
    +------+-----------+-------+
    |    1 | starrocks |   100 |
-   |    2 | flink     |   100 |
+   |    2 | spark     |   100 |
    +------+-----------+-------+
    2 rows in set (0.02 sec)
    ```
@@ -517,11 +517,11 @@ DISTRIBUTED BY HASH(`id`);
 
    您会注意到仅第二行数据发生了变化，而第一行数据未发生变化。
 
-### 导入至 Bitmap 列
+### 导入至 BITMAP 列
 
 `BITMAP` 常用于加速精确去重计数，例如计算独立访客数（UV），更多信息，请参见[使用 Bitmap 实现精确去重](../using_starrocks/Using_bitmap.md)。
 
-本示例以计算独立访客数（UV）为例，展示如何导入数据至 StarRocks 表 `BITMAP` 列中。
+本示例以计算独立访客数（UV）为例，展示如何导入数据至 StarRocks 表 `BITMAP` 列中。**自版本 1.1.1 起支持导入至 `BITMAP` 列**。
 
 1. 在 MySQL 客户端中创建一个 StarRocks 聚合表。
 
@@ -590,7 +590,7 @@ DISTRIBUTED BY HASH(`id`);
 
 `HLL` 可用于近似去重计数，更多信息，请参见[使用 HLL 实现近似去重](https://chat.openai.com/using_starrocks/Using_HLL)。
 
-本示例以计算独立访客数（UV）为例，展示如何导入数据至 StarRocks 表 `HLL` 列中。
+本示例以计算独立访客数（UV）为例，展示如何导入数据至 StarRocks 表 `HLL` 列中。**自版本 1.1.1 起支持导入至 `HLL` 列**。
 
 1. 在 MySQL 客户端中创建一个 StarRocks 聚合表。
 
