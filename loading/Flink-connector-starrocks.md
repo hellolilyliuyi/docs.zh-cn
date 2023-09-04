@@ -276,7 +276,8 @@ DISTRIBUTED BY HASH(id);
     ```
 
 - 如果 input records 为自定义的 Java 对象，对应的 Flink DataStream 作业的主要代码如下所示，完整代码请参见[LoadCustomJavaRecords](https://github.com/StarRocks/starrocks-connector-for-apache-flink/tree/main/examples/src/main/java/com/starrocks/connector/flink/examples/datastream/LoadCustomJavaRecords.java)。
-  -  本示例中，input record 是一个简单的 POJO `RowData`。
+
+  - 本示例中，input record 是一个简单的 POJO `RowData`。
 
     ```Java
     public static class RowData {
@@ -484,7 +485,7 @@ DISTRIBUTED BY HASH(`id`);
 
 3. 在 Flink SQL 客户端插入两行数据到表中。数据行的主键与 StarRocks 表中的行相同。第一行数据 `score` 列中具有较小的值，而第二行数据 `score` 列中具有较大的值。
 
-   1. ```SQL
+      ```SQL
       INSERT INTO `score_board` VALUES (1, 'starrocks-update', 99), (2, 'flink-update', 101);
       ```
 
