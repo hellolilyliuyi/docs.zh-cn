@@ -13,6 +13,7 @@ StarRocks 提供 Apache Spark™ 连接器 (StarRocks Connector for Apache Spark
 
 > **注意**
 >
+> - 使用 Spark connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT  权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。
 > - 了解不同版本的 Spark connector 之间的行为变化，请查看[升级 Spark connector](#升级-spark-connector)。
 > - 自 1.1.1 版本起，Spark connector 不再提供 MySQL JDBC 驱动程序，您需要将驱动程序手动放到 Spark 的类路径中。您可以在 [MySQL 官网](https://dev.mysql.com/downloads/connector/j/)或 [Maven 中央仓库](https://repo1.maven.org/maven2/mysql/mysql-connector-java/)上找到该驱动程序。
 
@@ -89,7 +90,7 @@ connector jar包的命名格式如下
 | starrocks.fe.http.url                          | 是      | 无 | FE 的 HTTP 地址，支持输入多个FE地址，使用逗号 , 分隔。格式为 <fe_host1>:<fe_http_port1>,<fe_host2>:<fe_http_port2>。自版本 1.1.1 开始，您还可以在 URL 中添加 `http://` 前缀，例如 `http://<fe_host1>:<fe_http_port1>,http://<fe_host2>:<fe_http_port2>`。|
 | starrocks.fe.jdbc.url                          | 是      | 无 | FE 的 MySQL Server 连接地址。格式为 jdbc:mysql://<fe_host>:<fe_query_port>。                                                                                                                                                    |
 | starrocks.table.identifier                     | 是      | 无 | StarRocks 目标表的名称，格式为 <database_name>.<table_name>。                                                                                                                                                                    |
-| starrocks.user                                 | 是      | 无 | StarRocks 集群账号的用户名。                                                                                                                                                                                                   |
+| starrocks.user                                 | 是      | 无 | StarRocks 集群账号的用户名。使用 Spark connector 导入数据至 StarRocks 需要目标表的 SELECT 和 INSERT  权限。如果您的用户账号没有这些权限，请参考 [GRANT](../sql-reference/sql-statements/account-management/GRANT.md) 给用户赋权。                                                                                                                                                                                                   |
 | starrocks.password                             | 是      | 无 | StarRocks 集群账号的用户密码。                                                                                                                                                                                                  |
 | starrocks.write.label.prefix                   | 否      | spark- | 指定Stream Load使用的label的前缀。                                                                                                                                                                                             |
 | starrocks.write.enable.transaction-stream-load | 否      | true | 是否使用 [Stream Load 事务接口](../loading/Stream_Load_transaction_interface.md)导入数据。要求 StarRocks 版本为 v2.5 或更高。此功能可以在一次导入事务中导入更多数据，同时减少内存使用量，提高性能。<br/> **注意：**<br/> 自 1.1.1 版本以来，只有当  `starrocks.write.max.retries` 的值为非正数时，此参数才会生效，因为 Stream Load 事务接口不支持重试。                                                               |
