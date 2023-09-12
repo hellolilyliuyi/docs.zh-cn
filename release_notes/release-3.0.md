@@ -6,7 +6,7 @@
 
 ### 新增特性
 
-- 聚合函数 group_concat() 支持使用 distinct 和 order by。[#28778](https://github.com/StarRocks/starrocks/pull/28778)
+- 聚合函数 [group_concat](../sql-reference/sql-functions/string-functions/group_concat.md) 支持使用 DISTINCT 关键词和 ORDER BY 子句。[#28778](https://github.com/StarRocks/starrocks/pull/28778)
 - 分区中数据可以随着时间推移自动进行降冷操作。[#29335](https://github.com/StarRocks/starrocks/pull/29335) [#29393](https://github.com/StarRocks/starrocks/pull/29393)
 
 ### 功能优化
