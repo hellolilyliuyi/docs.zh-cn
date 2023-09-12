@@ -162,7 +162,7 @@ Flink connector JAR 文件的命名格式如下：
 
   - `prepared_transaction_default_timeout_second`：StarRocks FE 参数，默认值为 `86400`。此参数值需要大于 Flink job 的停止时间。否则，在重新启动 Flink job 之前，可能会因事务超时而中止未完成事务，这些事务可能包含在成功 checkpoint 中的，如果中止，则会导致数据丢失。
   
-  请注意，当您设置一个较大的值时，则建议指定 `sink.label-prefix` 的值，则 Flink connector 可以根据 label 前缀和检查点中的一些信息来清理未完成的事务，而不是因事务超后由 StarRocks 清理（这可能会导致数据丢失）。
+    请注意，当您设置一个较大的值时，则建议指定 `sink.label-prefix` 的值，则 Flink connector 可以根据 label 前缀和检查点中的一些信息来清理未完成的事务，而不是因事务超时后由 StarRocks 清理（这可能会导致数据丢失）。
 
   - `label_keep_max_second` 和 `label_keep_max_num`：StarRocks FE 参数，默认值分别为 `259200` 和 `1000`。更多信息，参见[FE 配置](../loading/Loading_intro#fe-configurations)。`label_keep_max_second` 的值需要大于 Flink job 的停止时间。否则，Flink connector 无法使用保存在 Flink 的 savepoint 或 checkpoint 中的事务 lable 来检查事务在 StarRocks 中的状态，并判断这些事务是否已提交，最终可能导致数据丢失。
 
@@ -176,14 +176,14 @@ Flink connector JAR 文件的命名格式如下：
 
 ### Flush 策略
 
-Flink 连接器将在内存中 flush 缓冲数据，并通过 Stream Load 将其Flush 一次性 flush 到 StarRocks。在 at-least-once 和 exactly-once 场景中使用不同的方式触发 flush 。
+Flink connector 先在内存中 buffer 数据，然后通过 Stream Load 将其一次性 flush 到 StarRocks。在 at-least-once 和 exactly-once 场景中使用不同的方式触发 flush 。
 
 对于 at-least-once，在满足以下任何条件时触发 flush：
 
-- 缓冲的行字节数达到限制 `sink.buffer-flush.max-bytes`
-- 缓冲的行数达到限制 `sink.buffer-flush.max-rows`。（仅适用于版本 V1）
-- 自上次刷新以来经过的时间达到限制 `sink.buffer-flush.interval-ms`
-- 触发了检查点
+- buffer 数据的字节达到限制 `sink.buffer-flush.max-bytes`
+- buffer 数据行数达到限制 `sink.buffer-flush.max-rows`。（仅适用于版本 V1）
+- 自上次 flush 以来经过的时间达到限制 `sink.buffer-flush.interval-ms`
+- 触发了 checkpoint
 
 对于 exactly-once，仅在触发 checkpoint 时触发 flush。
 
