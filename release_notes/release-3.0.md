@@ -9,12 +9,12 @@
 - 聚合函数 group_concat() 支持使用 distinct 和 order by。[#28778](https://github.com/StarRocks/starrocks/pull/28778)
 - 分区中数据可以随着时间推移自动进行降冷操作。[#29335](https://github.com/StarRocks/starrocks/pull/29335) [#29393](https://github.com/StarRocks/starrocks/pull/29393)
 
-## 功能优化
+### 功能优化
 
-- 对所有复合谓词以及 WHERE 子句中的表达式支持隐式转换，可通过[会话变量](../reference/System_variable.md) `ENAenable_strict_type` 控制是否打开隐式转换（默认取值为 `false`）。[#21870](https://github.com/StarRocks/starrocks/pull/21870)
+- 对所有复合谓词以及 WHERE 子句中的表达式支持隐式转换，可通过[会话变量](../reference/System_variable.md) `enable_strict_type` 控制是否打开隐式转换（默认取值为 `false`）。[#21870](https://github.com/StarRocks/starrocks/pull/21870)
 - 统一 FE 和 BE 中 STRING 转换成 INT 的处理逻辑。[#29969](https://github.com/StarRocks/starrocks/pull/29969)
 
-## 问题修复
+### 问题修复
 
 修复了如下问题：
 
