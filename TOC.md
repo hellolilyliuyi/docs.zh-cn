@@ -700,6 +700,8 @@
 + 开发指南
   + [编译 StarRocks](/developers/build-starrocks/Build_in_docker.md)
   + [使用 debuginfo 文件进行调试](/developers/debuginfo.md)
++ 生态组件发布记录
+  + [Kafka connector]()
 + Release Notes
   + [v3.1](/release_notes/release-3.1.md)
   + [v3.0](/release_notes/release-3.0.md)
