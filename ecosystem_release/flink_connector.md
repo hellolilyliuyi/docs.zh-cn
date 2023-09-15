@@ -11,7 +11,7 @@
 - Flink 1.15 及之后：`flink-connector-starrocks-${connector_version}_flink-${flink_version}.jar`
 - Flink 1.15 之前：`flink-connector-starrocks-${connector_version}_flink-${flink_version}_${scala_version}.jar`
 
-**JAR 包获取方式:**
+**JAR 包获取方式：**
 
 您可以通过以下方式获取 Flink connector 的 JAR 包：
 
@@ -32,7 +32,9 @@
 
 ## 发布记录
 
-### 1.2.8
+### 1.2
+
+**1.2.8**
 
 本版本发布包含如下功能优化和问题修复。其中重点优化如下：
 
