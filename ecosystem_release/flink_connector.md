@@ -2,7 +2,10 @@
 
 ## 发布说明
 
-**使用文档：**[使用 Flink connector 导入数据](../loading/Flink-connector-starrocks.md)
+**使用文档：**
+
+- [使用 Flink connector 导入数据至 StarRocks](../loading/Flink-connector-starrocks.md)
+- [使用 Flink connector 从 StarRocks 读取数据](../unloading/Flink_connector.md)
 
 **源码下载地址：**[starrocks-connector-for-apache-flink](https://github.com/StarRocks/starrocks-connector-for-apache-flink)
 
@@ -39,27 +42,27 @@
 本版本发布包含如下功能优化和问题修复。其中重点优化如下：
 
 - 支持 Flink 1.16 和 1.17。
-- Sink 语义配置为 exactly-once 时建议设置 `sink.label-prefix`。使用说明，参考 [Exactly Once](../loading/Flink-connector-starrocks#exactly-once)。
+- Sink 语义配置为 exactly-once 时建议设置 `sink.label-prefix`。使用说明，参考 [Exactly Once](../loading/Flink-connector-starrocks.md#exactly-once)。
 
 **功能优化**
 
-- 支持选择是否配置 Stream Load 事务接口。[#228](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/228)
+- 支持配置是否使用 Stream Load 事务接口来实现 at-least-once 语义。[#228](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/228)
 - 为 sink 版本 V1 添加 retry 指标。[#229](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/229)
-- 如果 EXISTING_JOB_STATUS_FINISHED，无需 getLabelState。[#231](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/231)
+- 如果 EXISTING_JOB_STATUS 为 FINISHED，无需 getLabelState。[#231](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/231)
 - 移除 sink 版本 V1 中无用的堆栈跟踪日志。[#232](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/232)
 - [重构] 将 StarRocksSinkManagerV2 移动到 stream-load-sdk。[#233](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/233)
 - 根据 Flink 中的表结构自动判断数据导入是否仅更新部分列，而不需要用户显式指定参数 `sink.properties.columns`。[#235](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/235)
 - [重构] 将 probeTransactionStreamLoad 移动到 stream-load-sdk。 [#240](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/240)
 - 为 stream-load-sdk 添加 git-commit-id-plugin。[#242](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/242)
 - 在 info 级别的 log 中记录 DefaultStreamLoader#close。[#243](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/243)
-- 支持在下载 stream-load-sdk 依赖项的同时下载该 sdk 相关依赖。[#245](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/245)
+- stream-load-sdk 支持生成不包含依赖的 jar。[#245](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/245)
 - 在 stream-load-sdk 中使用 jackson 替换 fastjson。[#247](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/247)
 - 支持处理 update_before 记录。[#250](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/250)
 - 在文件中添加 Apache license。[#251](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/251)
 - 支持获取 stream-load-sdk 返回的异常信息。[#252](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/252)
 - 默认启用 `strip_outer_array` 和 `ignore_json_size`。[#259](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/259)
 - 如果 sink 语义为 exactly-once，当 Flink job 恢复后，Flink connector 会尝试清理 StarRocks 中未包含在checkpoint 中的未完成事务。[#271](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/271)
-- 重试失败后返回的第一个异常信息。[#279](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/279)
+- 重试失败后返回第一次的异常信息。[#279](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/279)
 
 **问题修复**
 
@@ -68,7 +71,7 @@
 
 **测试**
 
-增加从 Kafka 导入 StarRock 的测试框架。[#249](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/249)
+- 增加从 Kafka 导入 StarRock 的测试框架。[#249](https://github.com/StarRocks/starrocks-connector-for-apache-flink/pull/249)
 
 **文档**
 

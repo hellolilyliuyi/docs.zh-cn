@@ -2,7 +2,10 @@
 
 ## 发布说明
 
-**使用文档：**[使用 Spark connector 导入数据](../loading/Spark-connector-starrocks.md)
+**使用文档：**
+
+- [使用 Spark connector 导入数据至 StarRocks](../loading/Spark-connector-starrocks.md)
+- [使用 Spark connector 从 StarRocks 读取数据](../unloading/Spark_connector.md)
 
 **源码下载地址：**[starrocks-connector-for-apache-spark](https://github.com/StarRocks/starrocks-connector-for-apache-spark)
 
@@ -33,13 +36,13 @@
 
 > **注意**
 >
-> 升级至本版本，涉及行为变更。详细信息，参见[升级 Spark connector](https://docs.starrocks.io/zh-cn/main/loading/Spark-connector-starrocks#升级-spark-connector)。
+> 升级至本版本，涉及行为变更。详细信息，参见[升级 Spark connector](../loading/Spark-connector-starrocks.md#升级-spark-connector)。
 
 **新增特性**
 
 - Sink 支持重试。[#61](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/61)
 - 支持将数据导入至 BITMAP 或者 HLL 类型的列。[#67](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/67)
-- 支持导入数组类型的数据。[#74](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/74)
+- 支持导入 ARRAY 类型的数据。[#74](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/74)
 - 支持根据缓冲数据行数 flush 数据。[#78](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/78)
 
 **功能优化**
@@ -47,11 +50,11 @@
 - 移除无用的依赖项，使 Spark connector JAR 文件更轻量。[#55](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/55) [#57](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/57)
 - 用 jackson 替换 fastjson。[#58](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/58)
 - 添加缺失的 Apache license header。[#60](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/60)
-- Spark connector JAR 文件中未打包 MySQL JDBC 驱动程序。[#63](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/63)
-- 兼容 Spark Java 8API datetime。[#64](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/64)
+- Spark connector JAR 文件中不再打包 MySQL JDBC 驱动程序。[#63](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/63)
+- 兼容 Spark Java 8 API datetime。[#64](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/64)
 - 优化 row-string 转换器以减少 CPU 成本。[#68](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/68)
 - 支持在 starrocks.fe.http.url 中添加 HTTP scheme。[#71](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/71)
-- 覆盖 BatchWrite#useCommitCoordinator 以支持 DataBricks v13.1。 [#79](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/79)
+- 实现接口 BatchWrite#useCommitCoordinator 以支持 DataBricks v13.1。 [#79](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/79)
 - 在错误日志中添加权限和参数检查提示。[#81](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/81)
 
 **问题修复**
