@@ -2,7 +2,7 @@
 
 ## 发布说明
 
-**使用文档**：[使用 Flink connector 导入数据](../loading/Flink-connector-starrocks.md)
+**使用文档：**[使用 Flink connector 导入数据](../loading/Flink-connector-starrocks.md)
 
 **源码下载地址：**[starrocks-connector-for-apache-flink](https://github.com/StarRocks/starrocks-connector-for-apache-flink)
 
