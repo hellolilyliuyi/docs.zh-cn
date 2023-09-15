@@ -4,7 +4,7 @@
 
 **使用文档**：[使用 Flink connector 导入数据](../loading/Flink-connector-starrocks.md)
 
-**源码下载地址：**https://github.com/StarRocks/starrocks-connector-for-apache-flink
+**源码下载地址：**[starrocks-connector-for-apache-flink](https://github.com/StarRocks/starrocks-connector-for-apache-flink)
 
 **JAR 包命名规则：**
 
@@ -37,7 +37,7 @@
 本版本发布包含如下功能优化和问题修复。其中重点优化如下：
 
 - 支持 Flink 1.16 和 1.17。
-- Sink 语义配置为 exactly-once 时建议设置 `sink.label-prefix`。使用说明，参考[exactly-once]()。
+- Sink 语义配置为 exactly-once 时建议设置 `sink.label-prefix`。使用说明，参考 [Exactly Once](../loading/Flink-connector-starrocks#exactly-once)。
 
 **功能优化**
 

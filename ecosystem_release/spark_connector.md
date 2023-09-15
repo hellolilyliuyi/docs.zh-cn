@@ -2,9 +2,9 @@
 
 ## 发布说明
 
-**使用文档**：[使用 Spark connector 导入数据](../loading/Spark-connector-starrocks.md)
+**使用文档：**[使用 Spark connector 导入数据](../loading/Spark-connector-starrocks.md)
 
-**源码下载地址：**https://github.com/StarRocks/starrocks-connector-for-apache-spark
+**源码下载地址：**[starrocks-connector-for-apache-spark](https://github.com/StarRocks/starrocks-connector-for-apache-spark)
 
 **JAR 包命名规则：**`starrocks-spark-connector-${spark_version}_${scala_version}-${connector_version}.jar`
 
@@ -54,7 +54,7 @@
 
 **问题修复**
 
-- 解析 CSV 相关参数 `column_seperator` 和`row_delimiter` 中的转义字符。[#85 ](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/85)
+- 解析 CSV 相关参数 `column_seperator` 和`row_delimiter` 中的转义字符。[#85](https://github.com/StarRocks/starrocks-connector-for-apache-spark/pull/85)
 
 **文档**
 
