@@ -528,6 +528,8 @@ PROPERTIES (
 * 不设置该属性时，默认不进行自动降冷。
 * 设置该属性时，必须指定 `"storage_medium = "SSD"`。
 
+#### 设置分区 tablet 副本数
+
 * **replication_num**：分区的副本数。默认为 3。
 
 **注意事项**
