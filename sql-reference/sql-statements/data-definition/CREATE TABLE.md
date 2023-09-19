@@ -490,7 +490,7 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 
 #### 设置数据的初始存储介质、存储降冷时间和副本数
 
-如果 ENGINE 类型为 olap, 可以在 `properties` 设置该表数据的初始存储介质 (storage_medium)、存储降冷时间 (storage_cooldown_time) 和副本数 (replication_num)。
+如果 ENGINE 类型为 olap, 可以在 `properties` 设置该表数据的初始存储介质 (storage_medium)、存储降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl) 和副本数 (replication_num)。
 
 > 注意
 >
@@ -504,24 +504,33 @@ PROPERTIES (
 )
 ```
 
-**storage_medium**：用于指定该分区的初始存储介质，可选择 SSD 或 HDD。
+* **storage_medium**：用于指定该分区的初始存储介质，可选择 SSD 或 HDD。
 
-> **说明**
->
-> * 从 2.3.6，2.4.2，2.5.1 版本开始，支持在未显式指定该参数的情况下，由系统自动推导存储介质。如果您在建表时未显式指定该参数，系统会根据 BE 的磁盘类型来自动推导并设定表的存储类型。推导机制如下：如果 BE 上报的存储路径 (`storage_root_path`) 都是 SSD，系统会默认该参数为 SSD；如果 BE 上报的存储路径都是 HDD，系统会默认该参数为 HDD；如果 BE 上报的存储路径两者都有，系统会默认该参数为 SSD。从 2.3.10，2.4.5，2.5.4 版本开始，如果 BE 上报的存储路径两者都有且 FE 配置文件中设置了 `storage_cooldown_second`，系统会默认该参数为 SSD，如果未设置 `storage_cooldown_second`，系统默认为 HDD。
-> * 当 FE 配置项 `enable_strict_storage_medium_check` 为 `true` 时，表示在建表时会严格校验 BE 上的存储介质。如果建表语句中的存储介质和 BE 的存储类型不一致，建表语句会报错 `Failed to find enough hosts with storage medium [SSD|HDD] at all backends...`。当 `enable_strict_storage_medium_check` 为 `false` 时，可以忽略该报错强行建表，但是后续可能会导致集群磁盘空间分布出现不均衡，所以强烈建议在建表时指定和集群存储介质相匹配的 `storage_medium` 属性。
+  * 从 2.3.6，2.4.2，2.5.1 版本开始，支持在未显式指定该参数的情况下，由系统自动推导存储介质。如果您在建表时未显式指定该参数，系统会根据 BE 的磁盘类型来自动推导并设定表的存储类型。推导机制如下：如果 BE 上报的存储路径 (`storage_root_path`) 都是 SSD，系统会默认该参数为 SSD；如果 BE 上报的存储路径都是 HDD，系统会默认该参数为 HDD；如果 BE 上报的存储路径两者都有，系统会默认该参数为 SSD。从 2.3.10，2.4.5，2.5.4 版本开始，如果 BE 上报的存储路径两者都有且 FE 配置文件中设置了 `storage_cooldown_second`，系统会默认该参数为 SSD，如果未设置 `storage_cooldown_second`，系统默认为 HDD。
+  * 当 FE 配置项 `enable_strict_storage_medium_check` 为 `true` 时，表示在建表时会严格校验 BE 上的存储介质。如果建表语句中的存储介质和 BE 的存储类型不一致，建表语句会报错 `Failed to find enough hosts with storage medium [SSD|HDD] at all backends...`。当 `enable_strict_storage_medium_check` 为 `false` 时，可以忽略该报错强行建表，但是后续可能会导致集群磁盘空间分布出现不均衡，所以强烈建议在建表时指定和集群存储介质相匹配的 `storage_medium` 属性。
 
-**storage_cooldown_time**：当设置存储介质为 SSD 时，指定该分区在该时间点之后从 SSD 降冷到 HDD，设置的时间必须大于当前时间。
+* 指定分区数据降冷的时间或者时间间隔。以下两个参数选其一即可：
 
-* 不显式设置该属性时，默认不进行自动降冷。
-* 取值格式为："yyyy-MM-dd HH:mm:ss"
+  * **storage_cooldown_ttl**：该表分区数据降冷时间间隔。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区降冷时间间隔，各个分区的降冷时间点为该参数值 + 该分区的时间上界。
+  
+  支持取值为 `<num> YEAR`，`<num> MONTH`，`<num> DAY` 或 `<num> HOUR`。`<num>` 为非负整数。默认值为空，表示所有的数据都不降冷。
+  
+  例如建表时指定 `"storage_cooldown_ttl"="1 DAY"`，建表后存在分区 `p20230801` ，其范围为 `[2023-08-01 00:00:00,2023-08-02 00:00:00)`，则该分区的降冷时间点是 `2023-08-03 00:00:00 = 2023-08-02 00:00:00 + 1 DAY`。如果建表时指定 `"storage_cooldown_ttl"="0 DAY"`，则该分区降冷时间点是 `2023-08-02 00:00:00`。
+  
+  相较于使用 FE 静态参数 `storage_cooldown_second` 指定集群范围内数据自动降冷时间，或者使用下方的 `storage_cooldown_ttl` 手动指定该表分区降冷时间。使用本参数来指定表中分区数据降冷时间间隔，由系统自动降冷表中到达时间点的分区数据，降低您的运维成本。并且表中数据按照分区粒度降冷，更加灵活。
 
-**replication_num**：指定分区的副本数。默认为 3。
+  * **storage_cooldown_time**：该表分区数据降冷时间点。该分区数据在该时间点之后从 SSD 降冷到 HDD，设置的时间必须大于当前时间。
 
-说明：
+    * 不显式设置该属性时，默认不进行自动降冷。
+    * 显式设置该属性时，必须指定 `"storage_medium = "SSD"`。
+    * 取值格式为："yyyy-MM-dd HH:mm:ss"。
+
+* **replication_num**：分区的副本数。默认为 3。
+
+**注意事项**
 
 * 当表为单分区表时，以上属性为表的属性。
-* 当表为两级分区时，以上属性属于每一个分区。
+* 当表划分成多个分区时，以上属性属于每一个分区。
 * 如果希望不同分区有不同属性，可以通过 ADD PARTITION 或 MODIFY PARTITION 命令进行操作，具体参见[ALTER TABLE](../data-definition/ALTER%20TABLE.md)。
 
 #### 创建表时为列添加 bloom filter 索引
