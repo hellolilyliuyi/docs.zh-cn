@@ -497,8 +497,8 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 ```sql
 PROPERTIES (
     "storage_medium" = "[SSD|HDD]",
-    [ "storage_cooldown_time" = "yyyy-MM-dd HH:mm:ss", ]
-    [ "replication_num" = "3" ]
+    { "storage_cooldown_ttl" = "<num> YEAR | MONTH | DAY | HOUR"
+    | "storage_cooldown_time" = "yyyy-MM-dd HH:mm:ss" }
 )
 ```
 
@@ -514,6 +514,7 @@ PROPERTIES (
 * 当初始存储介质为 SSD，如果需要实现数据自动降冷，即数据自动从 SSD 介质迁移到 HDD 介质，则可以设置以下表属性（两者选其一），来指定数据自动降冷的时间点或者时间间隔。
 
   **参数说明**：
+
   * **storage_cooldown_ttl**：该表分区数据降冷时间间隔。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区降冷时间间隔，各个分区的降冷时间点为该参数值 + 该分区的时间上界。
   
     支持取值为 `<num> YEAR`，`<num> MONTH`，`<num> DAY` 或 `<num> HOUR`。`<num>` 为非负整数。默认值为空，表示所有的数据都不降冷。
@@ -537,7 +538,7 @@ PROPERTIES (
 
 ```sql
 PROPERTIES (
-    "replication_num" = "1"
+    "replication_num" = "<num>"
 )
 ```
 
