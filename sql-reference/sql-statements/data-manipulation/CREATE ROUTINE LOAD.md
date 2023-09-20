@@ -611,7 +611,7 @@ DISTRIBUTED BY HASH (col1);
 
 **导入作业**
 
-提交导入作业时使用匹配模式。使用 `jsonpaths` 指定待导入 JSON 数据的 Key。并且目标表中三列 `col2`、`col3`、`col4` 的值需要基于 JSON 数据进行表达式计算后得出，例如 `col4` 列的值是使用 case when 表达式计算后输出的值，因此 `COLUMNS` 中需要使用对应的表达式进行计算。
+提交导入作业时使用匹配模式。使用 `jsonpaths` 指定待导入 JSON 数据的 Key。并且目标表中三列 `col2`、`col3`、`col4` 的值需要基于 JSON 数据进行表达式计算后得出，例如 `col4` 列的值是使用 case when 表达式计算后输出的值，因此 `COLUMNS` 中需要使用对应的表达式。
 
 ```SQL
 CREATE ROUTINE LOAD rl_expr_test ON tbl_expr_test
