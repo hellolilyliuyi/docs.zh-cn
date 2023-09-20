@@ -530,7 +530,7 @@ PROPERTIES (
     * `storage_cooldown_second`：FE 静态参数，指定集群范围内所有表中数据自动降冷时间。
   * 设置该属性时，必须指定 `"storage_medium = "SSD"`。
   * 不设置该属性时，默认不进行自动降冷。
-  * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的将冷时间点。
+  * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的降冷时间点。
 
   **限制**
   * 不支持 List 分区。
