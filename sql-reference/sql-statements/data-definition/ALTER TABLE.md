@@ -330,7 +330,7 @@ ADD col_name data_type [NULL] AS generation_expr [COMMENT 'string']
 
 #### 修改表的属性
 
-目前支持修改如下属性 `bloom_filter_columns`，`colocate_with`， `dynamic_partition` 属性，`enable_persistent_index` 属性，`replication_num` 和 `default.replication_num` 属性，`storage_cooldown_ttl` 和 `storage_cooldown_time` 属性。
+支持修改 `bloom_filter_columns`，`colocate_with`， `dynamic_partition` 属性，`enable_persistent_index` 属性，`replication_num` 和 `default.replication_num` 属性，`storage_cooldown_ttl` 和 `storage_cooldown_time` 属性。
 
 语法：
 
