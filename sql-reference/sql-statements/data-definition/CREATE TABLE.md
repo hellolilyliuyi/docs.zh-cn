@@ -490,7 +490,7 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 
 #### 设置数据的初始存储介质、存储降冷时间和副本数
 
-如果 ENGINE 类型为 olap, 可以在属性 `properties` 中设置该表数据的初始存储介质 (storage_medium)、存储降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl)和副本数 (replication_num)。
+如果 ENGINE 类型为 OLAP，可以在属性 `properties` 中设置该表数据的初始存储介质 (storage_medium)、存储降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl)和副本数 (replication_num)。
 
 属性生效范围：当表为单分区表时，以上属性为表的属性。当表划分成多个分区时，以上属性属于每一个分区。并且如果希望不同分区有不同属性，则建表后可以执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md) 。
 
@@ -514,7 +514,7 @@ PROPERTIES (
 
   **参数说明**：
 
-  * `storage_cooldown_ttl`：该表分区数据降冷时间间隔。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区降冷时间间隔，各个分区的降冷时间点为该参数值 + 该分区的时间上界。
+  * `storage_cooldown_ttl`：该表数据降冷时间间隔。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区降冷时间间隔，各个分区的降冷时间点为该参数值 + 该分区的时间上界。
   
       取值为 `<num> YEAR`，`<num> MONTH`，`<num> DAY` 或 `<num> HOUR`。`<num>` 为非负整数。默认值为空，表示所有的数据都不降冷。
   
@@ -522,7 +522,7 @@ PROPERTIES (
 
   * `storage_cooldown_time`：该表数据降冷时间点。数据在该时间点之后数据从 SSD 降冷到 HDD，设置的时间必须大于当前时间。取值格式为："yyyy-MM-dd HH:mm:ss"。
 
-  **注意事项**
+  **使用说明**
 
   * 目前 StarRocks 提供如下数据自动降冷的相关参数，对比如下：
     * `storage_cooldown_ttl`：表的属性，指定该表中分区数据自动降冷时间间隔，由系统自动降冷表中到达时间点的分区数据，降低您的运维成本。并且表中数据按照分区粒度降冷，更加灵活。
@@ -530,6 +530,13 @@ PROPERTIES (
     * `storage_cooldown_second`：FE 静态参数，指定集群范围内所有表中数据自动降冷时间。
   * 设置该属性时，必须指定 `"storage_medium = "SSD"`。
   * 不设置该属性时，默认不进行自动降冷。
+  * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的将冷时间点。
+
+  **限制**
+  * 不支持 List 分区。
+  * 不支持分区列为非日期类型。
+  * 不支持多个分区列。
+  * 不支持主键模型表。
 
 **设置分区 tablet 副本数**
 
