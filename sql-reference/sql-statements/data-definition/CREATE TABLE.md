@@ -535,12 +535,13 @@ PROPERTIES (
     * `storage_cooldown_ttl`：表的属性，指定该表中分区自动降冷时间间隔，由系统自动降冷表中到达时间点的分区。并且表按照分区粒度降冷，更加灵活。
     * `storage_cooldown_time`：表的属性，指定该表的自动降冷时间点。如果需要不同分区具有不同降冷时间点，则需要执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md) 手动指定。
     * `storage_cooldown_second`：FE 静态参数，指定集群范围内所有表的自动降冷时间点。
-  * 配置以上三个参数时，必须指定 `"storage_medium = "SSD"`。
-  * 不配置以上三个参数时，则不进行自动降冷。
+  * 表属性 `storage_cooldown_ttl` 或 `storage_cooldown_time` 比 FE 静态参数 `storage_cooldown_second` 优先级高。
+  * 配置以上参数时，必须指定 `"storage_medium = "SSD"`。
+  * 不配置以上参数时，则不进行自动降冷。
   * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的降冷时间点。
 
   **限制**
-  * 不支持 List 分区。
+  * 不支持表达式分区和 List 分区。
   * 不支持分区列为非日期类型。
   * 不支持多个分区列。
   * 不支持主键模型表。
