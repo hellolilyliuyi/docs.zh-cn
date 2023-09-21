@@ -116,17 +116,18 @@ DROP TEMPORARY PARTITION partition_name;
 
 ```sql
 ALTER TABLE [database.]table
-MODIFY PARTITION partition_name SET ("key" = "value", ...);
+    MODIFY PARTITION { <partition_name> | partition_name_list | (*) }
+        SET ("key" = "value", ...);
 ```
 
 **使用说明：**
 
 * 当前支持修改分区的下列属性：
   * storage_medium
-  * storage_cooldown_ttl 和 storage_cooldown_time
+  * storage_cooldown_ttl 或 storage_cooldown_time
   * replication_num
 
-* 对于单分区表，partition_name 同表名。
+* 对于单分区表，分区名同表名。对于多分区表，如果需要修改所有分区的属性，则使用 `(*)` 更加方便。
 * 执行 `SHOW PARTITIONS FROM <table_name>` 查看修改后分区属性。
 
 ### 操作 rollup 相关语法
