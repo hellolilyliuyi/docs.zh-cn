@@ -475,7 +475,7 @@ FROM KAFKA
 
 ### 导入 JSON 格式数据
 
-#### **目标表的列名与** **JSON** **数据的** **Key 一致**
+#### 目标表的列名与 JSON 数据的 Key 一致
 
 可以使用简单模式导入数据，即创建导入作业时无需使用 `jsonpaths` 和 `COLUMNS` 参数。StarRocks 会按照目标表的列名去对应 JSON 数据的 Key。
 
@@ -584,7 +584,7 @@ FROM KAFKA
 > - 如果 JSON 数据最外层是数组结构，则需要在`PROPERTIES`设置`"strip_outer_array"="true"`，表示裁剪最外层的数组结构。并且需要注意在设置 `jsonpaths` 时，整个 JSON 数据的根节点是裁剪最外层的数组结构后**展平的 JSON 对象**。
 > - 如果不需要导入整个 JSON 数据，则需要使用 `json_root` 指定实际所需导入的 JSON 数据根节点。
 
-#### 目标表的列需要基于 JSON 数据进行 case when 表达式计算后生成
+#### 目标表存在基于 JSON 数据进行 CASE 表达式计算生成的衍生列
 
 需要使用匹配模式导入数据，即需要使用 `jsonpaths` 和 `COLUMNS` 参数，`jsonpaths` 指定待导入 JSON 数据的 Key，`COLUMNS` 参数配置表达式。
 
@@ -638,7 +638,7 @@ FROM KAFKA
 
 **查询数据**
 
-查询目标表中的数据，其中三列 `col2`、`col3`、`col4` 的值均是应用表达式计算后得出，例如 `col4` 列的值是使用 CASE 表达式计算后输出的值。
+查询目标表中的数据，返回结果显示其中三列 `col2`、`col3`、`col4` 的值均是应用表达式计算后得出，例如 `col4` 列的值是使用 CASE 表达式计算后输出的值。
 
 ```SQL
 MySQL [example_db]> SELECT * FROM tbl_expr_test;
