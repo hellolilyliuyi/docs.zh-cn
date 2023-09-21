@@ -488,13 +488,13 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 
 ### **PROPERTIES**
 
-#### 设置数据的初始存储介质、存储降冷时间和副本数
+#### 设置数据的初始存储介质、自动降冷时间和副本数
 
-如果 ENGINE 类型为 OLAP，可以在属性 `properties` 中设置该表数据的初始存储介质 (storage_medium)、存储降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl)和副本数 (replication_num)。
+如果 ENGINE 类型为 OLAP，可以在属性 `properties` 中设置该表数据的初始存储介质 (storage_medium)、自动降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl)和副本数 (replication_num)。
 
 属性生效范围：当表为单分区表时，以上属性为表的属性。当表划分成多个分区时，以上属性属于每一个分区。并且如果希望不同分区有不同属性，则建表后可以执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md)。
 
-**设置数据的初始存储介质、存储降冷时间**
+**设置数据的初始存储介质、自动降冷时间**
 
 ```sql
 PROPERTIES (
@@ -504,11 +504,11 @@ PROPERTIES (
 )
 ```
 
-* `storage_medium`：数据初始存储介质，取值为 `SSD` 或 `HDD`。显式指定该参数时，请确保您在 BE 静态参数 `storage_root_path` 中指定了相匹配的集群存储介质。
+* `storage_medium`：数据初始存储介质，取值为 `SSD` 或 `HDD`。显式指定该参数时，请确保该值与 BE 静态参数 `storage_root_path` 中指定的集群存储介质相匹配。
   
-  当 FE 配置项 `enable_strict_storage_medium_check` 为 `true` 时，表示在建表时会严格校验 BE 上的存储介质。如果建表语句中的存储介质和 BE 的存储类型不一致，建表语句会报错 `Failed to find enough hosts with storage medium [SSD|HDD] at all backends...`。当 `enable_strict_storage_medium_check` 为 `false` 时，可以忽略该报错强行建表，但是后续可能会导致集群磁盘空间分布出现不均衡，所以强烈建议在建表时指定和集群存储介质相匹配的 `storage_medium` 属性。
+  当 FE 配置项 `enable_strict_storage_medium_check` 为 `true` 时，表示在建表时会严格校验 BE 上的存储介质。如果建表语句中的存储介质和 BE 的存储类型不一致，建表语句会报错 `Failed to find enough hosts with storage medium [SSD|HDD] at all backends...`。当 `enable_strict_storage_medium_check` 为 `false` 时，可以忽略该报错强行建表，但是后续可能会导致集群磁盘空间分布出现不均衡。
 
-  从 2.3.6，2.4.2，2.5.1 版本开始，支持在未显式指定该参数的情况下，由系统自动推导存储介质。
+  从 2.3.6，2.4.2，2.5.1，3.0 及以上版本开始，支持在未显式指定该参数的情况下，由系统自动推导存储介质。
 
   * 在以下场景中，系统推导该参数为 SSD：
     * BE 上报的存储路径 (`storage_root_path`) 都是 SSD。
@@ -521,24 +521,24 @@ PROPERTIES (
 
   **参数说明**
 
-  * `storage_cooldown_ttl`：该表数据降冷**时间间隔**。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区降冷时间间隔，各个分区的降冷时间点为该参数值 + 该分区的时间上界。
+  * `storage_cooldown_ttl`：该表分区自动降冷**时间间隔**。如果您需要保留最近几个分区在 SSD，其它较早的分区经过一定时间间隔自动降冷至 HDD，则您可以使用该参数来指定该表分区自动降冷时间间隔，各个分区的自动降冷时间点为该参数值 + 该分区的时间上界。
   
-      取值为 `<num> YEAR`，`<num> MONTH`，`<num> DAY` 或 `<num> HOUR`。`<num>` 为非负整数。默认值为空，表示所有的数据都不降冷。
+      取值为 `<num> YEAR`，`<num> MONTH`，`<num> DAY` 或 `<num> HOUR`。`<num>` 为非负整数。默认值为空，表示该表分区不进行自动降冷。
   
-      例如建表时指定 `"storage_cooldown_ttl"="1 DAY"`，建表后存在分区 `p20230801` ，其范围为 `[2023-08-01 00:00:00,2023-08-02 00:00:00)`，则该分区的降冷时间点是 `2023-08-03 00:00:00`，即 `2023-08-02 00:00:00 + 1 DAY`。如果建表时指定 `"storage_cooldown_ttl"="0 DAY"`，则该分区降冷时间点是 `2023-08-02 00:00:00`。
+      例如建表时指定 `"storage_cooldown_ttl"="1 DAY"`，建表后存在分区 `p20230801` ，其范围为 `[2023-08-01 00:00:00,2023-08-02 00:00:00)`，则该分区的自动降冷时间点是 `2023-08-03 00:00:00`，即 `2023-08-02 00:00:00 + 1 DAY`。如果建表时指定 `"storage_cooldown_ttl"="0 DAY"`，则该分区自动降冷时间点是 `2023-08-02 00:00:00`。
 
-  * `storage_cooldown_time`：该表数据降冷**时间点**（绝对时间）。数据在该时间点之后数据从 SSD 降冷到 HDD，设置的时间必须大于当前时间。取值格式为："yyyy-MM-dd HH:mm:ss"。
+  * `storage_cooldown_time`：该表自动降冷**时间点**（绝对时间）。数据在该时间点之后数据从 SSD 自动降冷到 HDD，设置的时间必须大于当前时间。取值格式为："yyyy-MM-dd HH:mm:ss"。如果需要不同分区具有不同自动降冷时间点，则需要执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md) 手动指定。
 
   **使用说明**
 
   * 目前 StarRocks 提供如下数据自动降冷的相关参数，对比如下：
-    * `storage_cooldown_ttl`：表的属性，指定该表中分区自动降冷时间间隔，由系统自动降冷表中到达时间点的分区。并且表按照分区粒度降冷，更加灵活。
-    * `storage_cooldown_time`：表的属性，指定该表的自动降冷时间点。如果需要不同分区具有不同降冷时间点，则需要执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md) 手动指定。
-    * `storage_cooldown_second`：FE 静态参数，指定集群范围内所有表的自动降冷时间点。
+    * `storage_cooldown_ttl`：表的属性，指定该表中分区自动降冷时间间隔，由系统自动降冷表中到达时间点（时间间隔+分区时间上界）的分区。并且表按照分区粒度自动降冷，更加灵活。
+    * `storage_cooldown_time`：表的属性，指定该表的自动降冷时间点（绝对时间）。建表后也可以为不同分区配置不同时间点。
+    * `storage_cooldown_second`：FE 静态参数，指定集群范围内所有表的自动降冷时延。
   * 表属性 `storage_cooldown_ttl` 或 `storage_cooldown_time` 比 FE 静态参数 `storage_cooldown_second` 优先级高。
   * 配置以上参数时，必须指定 `"storage_medium = "SSD"`。
   * 不配置以上参数时，则不进行自动降冷。
-  * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的降冷时间点。
+  * 执行 `SHOW PARTITIONS FROM <table_name>` 查看各个分区的自动降冷时间点。
 
   **限制**
   * 不支持表达式分区和 List 分区。
@@ -749,7 +749,7 @@ PROPERTIES ("storage_type" = "column");
 >
 > 自 2.5.7 版本起，StarRocks 支持在建表和新增分区时自动设置分桶数量 (BUCKETS)，您无需手动设置分桶数量。更多信息，请参见 [确定分桶数量](../../../table_design/Data_distribution.md#确定分桶数量)。
 
-### 创建表并设置存储介质和数据降冷时间
+### 创建表并设置存储介质和数据自动降冷时间
 
 创建一个 olap 表，使用 Hash 分桶，使用列存，相同 key 的记录进行覆盖，设置初始存储介质和冷却时间。
 
