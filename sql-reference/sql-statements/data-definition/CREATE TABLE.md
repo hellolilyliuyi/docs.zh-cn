@@ -490,7 +490,7 @@ INDEX index_name (col_name[, col_name, ...]) [USING BITMAP] [COMMENT '']
 
 #### 设置数据的初始存储介质、自动降冷时间和副本数
 
-如果 ENGINE 类型为 OLAP，可以在属性 `properties` 中设置该表数据的初始存储介质 (storage_medium)、自动降冷时间或者时间间隔 (storage_cooldown_time 或者 storage_cooldown_ttl)和副本数 (replication_num)。
+如果 ENGINE 类型为 OLAP，可以在属性 `properties` 中设置该表数据的初始存储介质（storage_medium）、自动降冷时间（storage_cooldown_time）或者时间间隔（storage_cooldown_ttl）和副本数（replication_num）。
 
 属性生效范围：当表为单分区表时，以上属性为表的属性。当表划分成多个分区时，以上属性属于每一个分区。并且如果希望不同分区有不同属性，则建表后可以执行 [ALTER TABLE ... ADD PARTITION 或 ALTER TABLE ... MODIFY PARTITION](../data-definition/ALTER%20TABLE.md)。
 
