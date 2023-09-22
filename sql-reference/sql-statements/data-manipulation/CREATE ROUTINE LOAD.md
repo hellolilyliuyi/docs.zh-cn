@@ -530,7 +530,7 @@ FROM KAFKA
 > - 如果 JSON 数据最外层是数组结构，则需要在`PROPERTIES`设置`"strip_outer_array"="true"`，表示裁剪最外层的数组结构。并且需要注意在设置 `jsonpaths` 时，整个 JSON 数据的根节点是裁剪最外层的数组结构后**展平的 JSON 对象**。
 > - 如果不需要导入整个 JSON 数据，则需要使用 `json_root` 指定实际所需导入的 JSON 数据根节点。
 
-#### 目标表存在基于 JSON 数据进行计算生成的衍生列
+#### 目标表存在基于源数据进行计算生成的衍生列
 
 需要使用匹配模式导入数据，即需要使用 `jsonpaths` 和 `COLUMNS` 参数，`jsonpaths`指定待导入 JSON 数据的 Key，`COLUMNS` 参数指定待导入 JSON 数据的 Key 与目标表的列的映射关系和数据转换关系。
 
@@ -584,7 +584,7 @@ FROM KAFKA
 > - 如果 JSON 数据最外层是数组结构，则需要在`PROPERTIES`设置`"strip_outer_array"="true"`，表示裁剪最外层的数组结构。并且需要注意在设置 `jsonpaths` 时，整个 JSON 数据的根节点是裁剪最外层的数组结构后**展平的 JSON 对象**。
 > - 如果不需要导入整个 JSON 数据，则需要使用 `json_root` 指定实际所需导入的 JSON 数据根节点。
 
-#### 目标表存在基于 JSON 数据进行 CASE 表达式计算生成的衍生列
+#### 目标表的列值通过 CASE 表达式计算生成
 
 需要使用匹配模式导入数据，即需要使用 `jsonpaths` 和 `COLUMNS` 参数，`jsonpaths` 指定待导入 JSON 数据的 Key，`COLUMNS` 参数配置表达式。
 
