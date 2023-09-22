@@ -530,7 +530,7 @@ FROM KAFKA
 > - 如果 JSON 数据最外层是数组结构，则需要在`PROPERTIES`设置`"strip_outer_array"="true"`，表示裁剪最外层的数组结构。并且需要注意在设置 `jsonpaths` 时，整个 JSON 数据的根节点是裁剪最外层的数组结构后**展平的 JSON 对象**。
 > - 如果不需要导入整个 JSON 数据，则需要使用 `json_root` 指定实际所需导入的 JSON 数据根节点。
 
-#### 目标表存在基于源数据进行计算生成的衍生列
+#### 目标表的列值通过计算生成
 
 需要使用匹配模式导入数据，即需要使用 `jsonpaths` 和 `COLUMNS` 参数，`jsonpaths`指定待导入 JSON 数据的 Key，`COLUMNS` 参数指定待导入 JSON 数据的 Key 与目标表的列的映射关系和数据转换关系。
 
@@ -586,70 +586,62 @@ FROM KAFKA
 
 #### 目标表的列值通过 CASE 表达式计算生成
 
-需要使用匹配模式导入数据，即需要使用 `jsonpaths` 和 `COLUMNS` 参数，`jsonpaths` 指定待导入 JSON 数据的 Key，`COLUMNS` 参数配置表达式。
-
 **数据集**
 
-假设 Kafka 集群的 Topic `topic-expr-test3` 中存在如下 JSON 格式的数据。
+假设 Kafka 集群的 Topic `topic-expr-test` 中存在如下 JSON 格式的数据。
 
 ```JSON
-{"key1":1, "key2": 21, "key3": {"key4": 41}}
-{"key1":12, "key2": 22, "key3": {"key4": 42}}
-{"key1":13, "key2": 23, "key3": {"key4": 43}}
-{"key1":14, "key2": 24, "key3": {"key4": 44}}
+{"key1":1, "key2": 21}
+{"key1":12, "key2": 22}
+{"key1":13, "key2": 23}
+{"key1":14, "key2": 24}
 ```
 
 **目标数据库和表**
 
-假设在 StarRocks 集群的目标数据库 `example_db` 中存在目标表 `tbl_expr_test` 包含四列，其中三列的值都需要基于 JSON 数据进行表达式计算得出。其建表语句如下：
+假设在 StarRocks 集群的目标数据库 `example_db` 中存在目标表 `tbl_expr_test` 包含两列，其中列 `col2` 的值基于 JSON 数据进行 CASE 表达式计算得出。其建表语句如下：
 
 ```SQL
 CREATE TABLE tbl_expr_test (
-    col1 string, col2 string, col3 json, col4 string)
+    col1 string, col2 string)
 DISTRIBUTED BY HASH (col1);
 ```
 
 **导入作业**
 
-提交导入作业时使用匹配模式。使用 `jsonpaths` 指定待导入 JSON 数据的 Key。并且目标表中三列 `col2`、`col3`、`col4` 的值需要基于 JSON 数据进行表达式计算后得出，例如 `col4` 列的值是使用 CASE 表达式计算后输出的值，因此 `COLUMNS` 中需要使用对应的表达式。
+目标表中列 `col2` 的值需要基于 JSON 数据进行 CASE 表达式计算后得出，因此您需要在导入作业中的 `COLUMNS` 参数配置对应的 CASE 表达式。
 
 ```SQL
 CREATE ROUTINE LOAD rl_expr_test ON tbl_expr_test
 COLUMNS (
       key1,
       key2,
-      key3,
       col1 = key1,
-      col2 = if(key1 = "1", "12345", key1),
-      col3 = parse_json(key3),
-      col4 = CASE WHEN key1 = "1" THEN "key1=1" 
+      col2 = CASE WHEN key1 = "1" THEN "key1=1" 
                   WHEN key1 = "12" THEN "key2=21"
                   ELSE "nothing" END) 
-PROPERTIES
-(
-    "format" = "json",
-    "jsonpaths" = "[\"$.key1\",\"$.key2\",\"$.key3\"]")
+PROPERTIES ("format" = "json")
 FROM KAFKA
 (
     "kafka_broker_list" = "<kafka_broker1_ip>:<kafka_broker1_port>,<kafka_broker2_ip>:<kafka_broker2_port>",
-    "kafka_topic" = "topic-expr-test3"
+    "kafka_topic" = "topic-expr-test"
 );
 ```
 
 **查询数据**
 
-查询目标表中的数据，返回结果显示其中三列 `col2`、`col3`、`col4` 的值均是应用表达式计算后得出，例如 `col4` 列的值是使用 CASE 表达式计算后输出的值。
+查询目标表中的数据，返回结果显示列 `col2` 的值是使用 CASE 表达式计算后输出的值。
 
 ```SQL
 MySQL [example_db]> SELECT * FROM tbl_expr_test;
-+------+-------+--------------+---------+
-| col1 | col2  | col3         | col4    |
-+------+-------+--------------+---------+
-| 1    | 12345 | {"key4": 41} | key1=1  |
-| 12   | 12    | {"key4": 42} | key2=21 |
-| 13   | 13    | {"key4": 43} | nothing |
-| 14   | 14    | {"key4": 44} | nothing |
-+------+-------+--------------+---------+
++------+---------+
+| col1 | col2    |
++------+---------+
+| 1    | key1=1  |
+| 12   | key2=21 |
+| 13   | nothing |
+| 14   | nothing |
++------+---------+
 4 rows in set (0.015 sec)
 ```
 
