@@ -618,7 +618,7 @@ COLUMNS (
       key2,
       col1 = key1,
       col2 = CASE WHEN key1 = "1" THEN "key1=1" 
-                  WHEN key1 = "12" THEN "key2=21"
+                  WHEN key1 = "12" THEN "key1=12"
                   ELSE "nothing" END) 
 PROPERTIES ("format" = "json")
 FROM KAFKA
@@ -638,7 +638,7 @@ MySQL [example_db]> SELECT * FROM tbl_expr_test;
 | col1 | col2    |
 +------+---------+
 | 1    | key1=1  |
-| 12   | key2=21 |
+| 12   | key1=12 |
 | 13   | nothing |
 | 14   | nothing |
 +------+---------+
