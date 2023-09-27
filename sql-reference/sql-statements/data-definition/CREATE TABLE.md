@@ -556,6 +556,10 @@ PROPERTIES (
 )
 ```
 
+#### 当表为随机分桶，且由系统动态新增分区中的分桶数量时，如何进一步优化导入性能
+
+适当调表属性 `max_mutable_partition_num` 的值，以优化大批量或者高频导入性能。
+
 #### 创建表时为列添加 bloom filter 索引
 
 如果 Engine 类型为 olap, 可以指定某列使用 bloom filter 索引。bloom filter 索引使用时有如下限制：
