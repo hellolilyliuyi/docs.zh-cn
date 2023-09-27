@@ -535,12 +535,13 @@ DISTRIBUTED BY HASH(site_id,city_code);
         DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量
         ```
 
-        建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRock 为分区自动设置的分桶数量。
+        建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为分区自动设置的分桶数量。
 
     - 随机分桶表：
 
-       自 3.2 版本起，优化了随机分桶表自动设置分区中分桶数量的逻辑。建表后 StarRocks 根据导入并发度等**动态增加**分桶数量，来保证大批量或者高频导入性能。如果您需要进一步提高导入性能，则可以适当提高系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值。
-       建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRock 为分区设置的**当前**分桶数量。
+       自 2.5.7 版本起， StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 优化了自动设置分桶数量的逻辑。建表后 StarRocks 根据导入并发度等**动态增加**分区中分桶数量，来优化大批量或者高频导入性能。如果您需要进一步提高导入性能，则可以适当提高系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值。
+
+       建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为分区设置的**当前**分桶数量。
 
     **注意事项**
     - 如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。
@@ -574,7 +575,7 @@ DISTRIBUTED BY HASH(site_id,city_code);
 
     - 随机分桶表：
 
-      自 3.2 版本起，优化了随机分桶表自动设置分区中分桶数量的逻辑。创建新分区后系统根据导入并发度等动态增加分区中分桶数量，可以保证大批量或者高频导入的性能。如果您需要进一步提高导入性能，则可以适当提高系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值。
+      自 2.5.7 版本起， StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 优化了自动设置分桶数量的逻辑。创建新分区后系统根据导入并发度等**动态增加**新分区中分桶数量，来优化大批量或者高频导入的性能。如果您需要进一步提高导入性能，则可以适当提高系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值。
 
     **注意事项**
 
