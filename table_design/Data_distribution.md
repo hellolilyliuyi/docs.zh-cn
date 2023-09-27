@@ -516,27 +516,32 @@ DISTRIBUTED BY HASH(site_id,city_code);
 
 - 建表时如何设置分桶数量
   
-  - 方式一：自动设置分桶数量
+  - 方式一：自动设置分桶数量（推荐）
+    > **注意**
+    >
+    > 如果表单个分区原始数据规模预计超过 100 GB，建议您使用下述方式手动设置分桶数量。
 
-    自 2.5.7 版本起， StarRocks 支持根据机器资源和数据量自动设置分区的分桶数量。
+    - 哈希分桶表：自 2.5.7 版本起， StarRocks 支持建表后根据机器资源和数据量自动设置分区的分桶数量。
 
-    建表示例：
+        建表示例：
 
-    ```SQL
-    CREATE TABLE site_access(
-        site_id INT DEFAULT '10',
-        city_code SMALLINT,
-        user_name VARCHAR(32) DEFAULT '',
-        pv BIGINT SUM DEFAULT '0'
-    )
-    AGGREGATE KEY(site_id, city_code, user_name)
-    DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量
-    ```
+        ```SQL
+        CREATE TABLE site_access(
+            site_id INT DEFAULT '10',
+            city_code SMALLINT,
+            user_name VARCHAR(32) DEFAULT '',
+            pv BIGINT SUM DEFAULT '0'
+        )
+        AGGREGATE KEY(site_id, city_code, user_name)
+        DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量
+        ```
 
-    如果需要开启该功能，则您需要确保 FE 动态参数 `enable_auto_tablet_distribution` 为 `true`。
-    建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRock 为分区自动设置的分桶数量。
+        如果需要开启该功能，则您需要确保 FE 动态参数 `enable_auto_tablet_distribution` 为 `true`。
+        建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRock 为分区自动设置的分桶数量。
 
-    > 如您的表单个分区原始数据规模预计超过100GB，建议您使用下述方式手动设置分桶数量。
+    - 随机分桶表：
+
+      自 3.2 版本起，优化了随机分桶表自动设置分桶数量的逻辑。建表后系统根据导入和数据量动态创建分桶，可以保证大批量或者高频导入的性能。如果您需要提高导入性能，则可以适当提高 total_dop 和 max_mutable_partition_num 的值。
 
   - 方式二：手动设置分桶数量
 
