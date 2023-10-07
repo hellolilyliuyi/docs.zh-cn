@@ -550,7 +550,7 @@ DISTRIBUTED BY HASH(site_id,city_code);
     | 哈希分桶表 | 自 2.5.7 版本起， StarRocks 支持根据机器资源和数据量自动设置分区的分桶数量。<br>注意事项：<br>如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。 |
     | 随机分桶表 | 自 2.5.7 版本起， StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 优化了自动设置分桶数量的逻辑。创建新分区后 StarRocks 根据集群能力和导入数据量等**动态增加**新分区中分桶数量。在提高建表易用性的同时，不影响大批量或者高频导入性能。<!--待定如果您需要进一步增加或减少分桶数量，则可以适当调整系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值 根据的逻辑？？？。--> |
 
-    新增分区后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为新分区设置的分桶数量。如果是哈希分桶表，分区的分桶数量**固定**，如果是随机分桶表，分区的分桶数量会**动态变化**，返回结果显示分区**当前**的分桶数量。
+    新增分区后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为新分区设置的分桶数量。如果是哈希分桶表，新分区的分桶数量**固定**，如果是随机分桶表，新分区的分桶数量会**动态变化**，返回结果显示新分区**当前**的分桶数量。
 
   - 方式二：手动设置分桶数量
 
