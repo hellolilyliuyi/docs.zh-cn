@@ -518,12 +518,44 @@ DISTRIBUTED BY HASH(site_id,city_code);
   
   - 方式一：自动设置分桶数量（推荐）
 
-    | 分桶方式   | 说明                                                         | 建表示例 |
-    | ---------- | ------------------------------------------------------------ | -------- |
-    | 哈希分桶表 | 自 2.5.7 版本起，StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。       <br>注意事项：<br>如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。 |CREATE TABLE site_access(<br>site_id INT DEFAULT '10', <br> city_code SMALLINT, <br> user_name VARCHAR(32) DEFAULT '',<br>pv BIGINT SUM DEFAULT '0'<br>)<br>AGGREGATE KEY(site_id, city_code, user_name)<br>DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量|
-    | 随机分桶表 | 自 2.5.7 版本起，StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 优化了自动设置分桶数量的逻辑，建表后 StarRocks 根据集群能力和导入数据量等**按需动态增加**分区中分桶数量。在提高建表易用性的同时，不影响大批量或者高频导入性能。<!--待定如果您需要进一步增加或减少分桶数量，则可以适当调整系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值 根据的逻辑？？？。--> |     CREATE TABLE site_access(<br>site_id INT DEFAULT '10', <br> city_code SMALLINT, <br> user_name VARCHAR(32) DEFAULT '',<br>pv BIGINT SUM DEFAULT '0'<br>)<br>AGGREGATE KEY(site_id, city_code, user_name)<br>; --无需手动设置分桶数量，并且随机分桶，无需设置分桶键   |
+    - 哈希分桶表
 
-    建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为分区设置的分桶数量。如果是哈希分桶表，分区的分桶数量**固定**，如果是随机分桶表，分区的分桶数量会**动态变化**，返回结果显示分区**当前**的分桶数量。
+      自 2.5.7 版本起，StarRocks 支持在建表后根据机器资源和数据量自动设置分区中分桶数量。
+      > **注意**
+      >
+      > 如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。
+
+        建表示例：
+
+        ```sql
+        CREATE TABLE site_access(
+        site_id INT DEFAULT '10',
+        city_code SMALLINT,
+        user_name VARCHAR(32) DEFAULT '',
+        pv BIGINT SUM DEFAULT '0')
+        AGGREGATE KEY(site_id, city_code, user_name)
+        DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量
+        ```
+
+    - 随机分桶表
+
+      自 2.5.7 版本起，StarRocks 支持在**建表后**根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 进一步优化了自动设置分桶数量的逻辑，除了支持在**建表后**自动设置分桶数量，还支持**在导入过程中**根据集群能力和导入数据量等**按需动态增加**分区中分桶。在提高建表易用性的同时，还能提升大数据集的导入性能。
+
+        建表示例：
+
+        ```sql
+        CREATE TABLE site_access1 (
+            event_day DATE,
+            site_id INT DEFAULT '10', 
+            pv BIGINT DEFAULT '0' ,
+            city_code VARCHAR(100),
+            user_name VARCHAR(32) DEFAULT ''
+        )
+        DUPLICATE KEY (event_day,site_id,pv)
+        ;--无需手动设置分桶数量，并且随机分桶，无需设置分桶键
+        ```
+
+        建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为分区设置的分桶数量。如果是哈希分桶表，建表后分区的分桶数量**固定**，如果是随机分桶表，建表后在导入过程中，分区的分桶数量会**动态增加**，返回结果显示分区**当前**的分桶数量。
 
   - 方式二：手动设置分桶数量
 
@@ -545,10 +577,17 @@ DISTRIBUTED BY HASH(site_id,city_code);
 
   - 方式一：自动设置分桶数量（推荐）
 
-    | 分桶方式   | 说明                                                         |
-    | ---------- | ------------------------------------------------------------ |
-    | 哈希分桶表 | 自 2.5.7 版本起， StarRocks 支持根据机器资源和数据量自动设置分区的分桶数量。<br>注意事项：<br>如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。 |
-    | 随机分桶表 | 自 2.5.7 版本起， StarRocks 支持建表后根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 优化了自动设置分桶数量的逻辑。创建新分区后 StarRocks 根据集群能力和导入数据量等**动态增加**新分区中分桶数量。在提高建表易用性的同时，不影响大批量或者高频导入性能。<!--待定如果您需要进一步增加或减少分桶数量，则可以适当调整系统参数 [`pipeline_dop`](../reference/System_variable#pipeline_dop) 和表属性 `max_mutable_partition_num` 的值 根据的逻辑？？？。--> |
+    - 哈希分桶表
+
+      自 2.5.7 版本起， StarRocks 支持根据机器资源和数据量自动设置分区的分桶数量。
+      > **注意**
+      >
+      > 如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分桶数量。 |
+    - 随机分桶表
+
+自 2.5.7 版本起，StarRocks 支持根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 进一步优化了自动设置分桶数量的逻辑，除了支持在**建表后**自动设置分桶数量，还支持**在导入过程中**根据集群能力和导入数据量等**按需动态增加**分区中分桶。在提高建表易用性的同时，还能提升大数据集的导入性能。
+
+      自 2.5.7 版本起， StarRocks 支持**在新增分区后**根据机器资源和数据量自动设置新分区中分桶数量。并且自 3.2 版本起，StarRocks 进一步优化了自动设置分桶数量的逻辑，除了支持**在新增分区后**自动设置分桶数量，还支持**在导入数据至分区过程中**根据集群能力和导入数据量等**按需动态增加**新分区中分桶数量。在提高建表易用性的同时，不影响大批量或者高频导入性能。|
 
     新增分区后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为新分区设置的分桶数量。如果是哈希分桶表，新分区的分桶数量**固定**，如果是随机分桶表，新分区的分桶数量会**动态变化**，返回结果显示新分区**当前**的分桶数量。
 
