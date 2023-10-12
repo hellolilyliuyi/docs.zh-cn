@@ -2,7 +2,7 @@
 
 ## 功能
 
-Routine Load 支持持续消费 Apache Kafka® 的消息并导入至 StarRocks 中。Routine Load 支持 Kafka 中消息的格式为 CSV、JSON、Avro (自 v3.0.1)，并且访问 Kafka 时，支持多种安全协议，包括 `plaintext`，`ssl`, `sasl_plaintext` 和 `sasl_ssl`。
+Routine Load 支持持续消费 Apache Kafka® 的消息并导入至 StarRocks 中。Routine Load 支持 Kafka 中消息的格式为 CSV、JSON、Avro (自 v3.0.1)，并且访问 Kafka 时，支持多种安全协议，包括 `plaintext`、`ssl`、`sasl_plaintext` 和 `sasl_ssl`。
 
 本文介绍 CREATE ROUTINE LOAD 的语法、参数说明和示例。
 
@@ -177,7 +177,7 @@ FROM <data_source>
 
 **指定 BE 访问 Kafka 时的安全协议并配置相关参数**
 
-支持安全协议为 `plaintext`（默认），`ssl`, `sasl_plaintext` 和 `sasl_ssl`，并且需要根据安全协议配置相关参数。
+支持安全协议为 `plaintext`（默认）、`ssl`、`sasl_plaintext` 和 `sasl_ssl`，并且需要根据安全协议配置相关参数。
 
 当安全协议为 `sasl_plaintext` 或 `sasl_ssl` 时，支持如下 SASL 认证机制：
 
