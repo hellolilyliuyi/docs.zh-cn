@@ -534,7 +534,7 @@ DISTRIBUTED BY HASH(site_id,city_code);
           user_name VARCHAR(32) DEFAULT '',
           pv BIGINT SUM DEFAULT '0')
       AGGREGATE KEY(site_id, city_code, user_name)
-      DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分桶数量
+      DISTRIBUTED BY HASH(site_id,city_code); --无需手动设置分区中分桶数量
       ```
 
     - 随机分桶表
@@ -555,7 +555,7 @@ DISTRIBUTED BY HASH(site_id,city_code);
           city_code VARCHAR(100),
           user_name VARCHAR(32) DEFAULT '')
       DUPLICATE KEY (event_day,site_id,pv)
-      ;--无需手动设置分桶数量，并且随机分桶，无需设置分桶键
+      ;--无需手动设置分区中分桶数量，并且随机分桶，无需设置分桶键
       ```
 
     建表后，您可以执行 [SHOW PARTITIONS](../sql-reference/sql-statements/data-manipulation/SHOW%20PARTITIONS.md) 来查看 StarRocks 为分区设置的分桶数量。如果是哈希分桶表，建表后分区的分桶数量**固定**。
@@ -587,14 +587,14 @@ DISTRIBUTED BY HASH(site_id,city_code);
 
     - 哈希分桶表
 
-      自 2.5.7 版本起， 新增分区时您无需手动设置分区中分桶数量。StarRocks 会根据机器资源和数据量自动设置分区中分桶数量。
+      自 2.5.7 版本起，新增分区时您无需手动设置分区中分桶数量。StarRocks **在创建新分区时**会根据机器资源和数据量自动设置分区中分桶数量。
       > **注意**
       >
       > 如果表单个分区原始数据规模预计超过 100 GB，建议您手动设置分区中分桶数量。
 
     - 随机分桶表
 
-       自 2.5.7 版本起， StarRocks 支持**在新增分区时**根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 进一步优化了自动设置分桶数量的逻辑，除了支持**在新增分区时**自动设置分区中分桶数量，还支持**在导入数据至分区过程中**根据集群能力和导入数据量等**按需动态增加**分区中分桶数量。在提高新增分区易用性的同时，还能提升大数据集的导入性能。
+       自 2.5.7 版本起，新增分区时您无需手动设置分区中分桶数量。StarRocks 在**创建在新分区时**会根据机器资源和数据量自动设置分区中分桶数量。并且自 3.2 版本起，StarRocks 进一步优化了自动设置分桶数量的逻辑，除了支持**在创建新分区时**自动设置分区中分桶数量，还支持**在导入数据至分区过程中**根据集群能力和导入数据量等**按需动态增加**分区中分桶数量。在提高新增分区易用性的同时，还能提升大数据集的导入性能。
        > **说明**
        >
        > 单个分桶的大小默认为 `1024 * 1024 * 1024 B`（1 GB），在新增分区时您可以在 `PROPERTIES("bucket_size"="xxx")` 中指定单个分桶的大小，最大支持为 4 GB。
