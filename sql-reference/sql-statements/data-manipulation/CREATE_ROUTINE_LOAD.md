@@ -181,7 +181,6 @@ FROM <data_source>
 
 当安全协议为 `sasl_plaintext` 或 `sasl_ssl` 时，支持如下 SASL 认证机制：
 
-- GSSAPI (Kerberos)
 - PLAIN
 - SCRAM-SHA-256 和 SCRAM-SHA-512
 - OAUTHBEARER
