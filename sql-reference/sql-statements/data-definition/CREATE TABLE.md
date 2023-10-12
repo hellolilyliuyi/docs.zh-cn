@@ -1,4 +1,4 @@
-# CREATE TABLE test
+# CREATE TABLE
 
 ## 功能
 
