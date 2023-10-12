@@ -2,7 +2,7 @@
 
 ## 功能
 
-Routine Load 支持持续消费 Apache Kafka® 的消息并导入至 StarRocks 中。Routine Load 支持 Kafka 中消息的格式为 CSV、JSON、Avro (自 v3.0.1)，并且支持通过无安全认证、SSL 加密和认证、或者 SASL 认证机制访问 Kafka。
+Routine Load 支持持续消费 Apache Kafka® 的消息并导入至 StarRocks 中。Routine Load 支持 Kafka 中消息的格式为 CSV、JSON、Avro (自 v3.0.1)，并且访问 Kafka 时，支持多种安全协议，包括 `plaintext`，`ssl`, `sasl_plaintext` 和 `sasl_ssl`。
 
 本文介绍 CREATE ROUTINE LOAD 的语法、参数说明和示例。
 
@@ -177,7 +177,9 @@ FROM <data_source>
 
 **指定 BE 访问 Kafka 时的安全协议并配置相关参数**
 
-支持安全协议为 `plaintext`（默认），`ssl`, `sasl_plaintext` 和 `sasl_ssl`，并且需要根据安全协议配置相关参数。并且当安全协议为 `sasl_plaintext` 或 `sasl_ssl` 时，支持如下 SASL 认证机制：
+支持安全协议为 `plaintext`（默认），`ssl`, `sasl_plaintext` 和 `sasl_ssl`，并且需要根据安全协议配置相关参数。
+
+当安全协议为 `sasl_plaintext` 或 `sasl_ssl` 时，支持如下 SASL 认证机制：
 
 - GSSAPI (Kerberos)
 - PLAIN
@@ -187,7 +189,7 @@ FROM <data_source>
 - **访问 Kafka 时，使用安全协议 SSL**
 
 ```sql
-"property.security.protocol" = "ssl", -- 安全协议为 SSL
+"property.security.protocol" = "ssl", -- 指定安全协议为 SSL
 "property.ssl.ca.location" = "FILE:ca-cert", -- CA 证书的位置
 --如果 Kafka server 端开启了 client 认证，则还需设置如下三个参数：
 "property.ssl.certificate.location" = "FILE:client.pem", -- Client 的 public key 的位置
@@ -198,8 +200,8 @@ FROM <data_source>
 - **访问 Kafka 时，使用 SASL_PLAINTEXT 安全协议和配置 SASL/PLAIN 认证
 
 ```sql
-"property.security.protocol"="SASL_PLAINTEXT", -- 安全协议为 SASL_PLAINTEXT
-"property.sasl.mechanism"="PLAIN", -- 配置 SASL/PLAIN 认证
+"property.security.protocol"="SASL_PLAINTEXT", -- 指定安全协议为 SASL_PLAINTEXT
+"property.sasl.mechanism"="PLAIN", -- 指定 SASL 认证机制为 PLAIN
 "property.sasl.username"="admin", -- SASL 的用户名
 "property.sasl.password"="admin" -- SASL 的密码
 ```
@@ -422,7 +424,7 @@ FROM KAFKA
 
 #### 指定安全协议为 SSL 并配置相关参数
 
-如果需要指定 BE 访问 Kafka 时使用的安全协议为 SSL，则需要配置`"property.security.protocol" = "ssl"` 等自定义参数。
+如果需要指定 BE 访问 Kafka 时使用的安全协议为 SSL，则需要配置 `"property.security.protocol" = "ssl"` 等参数。
 
 ```SQL
 CREATE ROUTINE LOAD example_db.example_tbl1_ordertest1 ON example_tbl1
