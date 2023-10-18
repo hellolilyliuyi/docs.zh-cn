@@ -92,7 +92,7 @@ EXECUTE stmt_name [USING @var_name [, @var_name] ...]
 EXECUTE insert_stmt USING @id1, @country1, @city1, @revenue1;
 ```
 
-## DEALLOCATE PREPARE 或 DROP PREPARE
+### DEALLOCATE PREPARE 或 DROP PREPARE
 
 ```SQL
 {DEALLOCATE | DROP} PREPARE stmt_name
