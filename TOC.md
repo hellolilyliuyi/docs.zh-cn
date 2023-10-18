@@ -731,6 +731,7 @@
       + [tan](/sql-reference/sql-functions/math-functions/tan.md)
       + [tanh](/sql-reference/sql-functions/math-functions/tanh.md)
       + [truncate](/sql-reference/sql-functions/math-functions/truncate.md)
+  + [Prepared Statement](/sql-reference/sql-statements/prepared_stmt.md)
   + [AUTO_INCREMENT](/sql-reference/sql-statements/auto_increment.md)
   + [生成列](/sql-reference/sql-statements/generated_columns.md)
   + [系统变量](/reference/System_variable.md)
