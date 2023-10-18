@@ -23,7 +23,7 @@
 - 如果 ARRAY<STRUCT> 类型的数据中 STRUCT 的某些子列缺失，在读取数据时因为填充默认数据长度错误会导致 BE Crash。[#30263](https://github.com/StarRocks/starrocks/pull/30263)
 - 升级 Berkeley DB Java Edition 的版本，避免安全漏洞。[#30029](https://github.com/StarRocks/starrocks/pull/30029)
 - 主键模型表导入时，如果 Truncate 操作和查询并发，在有些情况下会报错“java.lang.NullPointerException”。[#30573](https://github.com/StarRocks/starrocks/pull/30573)
-- 如果 Schema Change 执行时间过长，会因为 Table 版本被被垃圾回收而失败。 [#31376](https://github.com/StarRocks/starrocks/pull/31376)
+- 如果 Schema Change 执行时间过长，会因为 Tablet 版本被垃圾回收而失败。 [#31376](https://github.com/StarRocks/starrocks/pull/31376)
 - 如果表字段为 `NOT NULL` 但没有设置默认值，使用 CloudCanal 导入时会报错“Unsupported dataFormat value is : \N”。[#30799](https://github.com/StarRocks/starrocks/pull/30799)
 - 存算分离模式下，表的 Key 信息没有在 `information_schema.COLUMNS` 中记录，导致使用 Flink Connector 导入数据时 DELETE 操作无法执行。[#31458](https://github.com/StarRocks/starrocks/pull/31458)
 - 升级时如果某些列的类型也升级了（比如 Decimal 升级到 Decimal v3），某些特定特征的表在 Compaction 时会导致 BE crash。[#31626](https://github.com/StarRocks/starrocks/pull/31626)
