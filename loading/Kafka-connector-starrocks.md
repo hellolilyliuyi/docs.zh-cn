@@ -26,7 +26,7 @@ StarRocks 提供  Apache Kafka®  连接器 (StarRocks Connector for Apache Kafk
 - 自建 Kafka 集群
 
   - 下载并解压压缩包 [starrocks-kafka-connector-1.0.0.tar.gz](https://releases.starrocks.io/starrocks/starrocks-kafka-connector-1.0.0.tar.gz)。
-  - 将解压后的目录复制到 Kafka 的 libs 目录中，重新启动 Kafka connect 以读取最新的 JAR 文件。
+  - 将解压后的目录复制到 Kafka 的 libs 目录中，并将包含 JAR 文件的目录路径添加到 Kafka Connect worker 配置文件的 `plugin.path` 参数中。重新启动 Kafka connect 服务（无需重启 Kafka 服务）以读取最新的 JAR 文件。
 
 - Confluent cloud
 
@@ -40,7 +40,7 @@ StarRocks 提供  Apache Kafka®  连接器 (StarRocks Connector for Apache Kafk
 
 ## 使用示例
 
-本文以自建 Kafka 集群为例，介绍如何配置 Kafka connector 并启动 Kafka connect ，导入数据至 StarRocks。
+本文以自建 Kafka 集群为例，介绍如何配置 Kafka connector 并启动 Kafka connect 服务（无需重启 Kafka 服务），导入数据至 StarRocks。
 
 1. 创建 Kafka connector 配置文件 **connect-StarRocks-sink.properties**，并配置对应参数。参数和相关说明，参见[参数说明](#参数说明)。
 
@@ -60,7 +60,7 @@ StarRocks 提供  Apache Kafka®  连接器 (StarRocks Connector for Apache Kafk
     >
     > 如果源端数据为 CDC 数据，例如 Debezium CDC 格式的数据，并且 StarRocks 表为主键模型的表，为了将源端的数据变更同步至主键模型的表，则您还需要[配置 `transforms` 以及相关参数](#导入-debezium-cdc-格式数据)。
 
-2. 启动 Kafka Connect。命令中的参数解释，参见 [Running Kafka Connect](https://kafka.apache.org/documentation.html#connect_running)。
+2. 启动 Kafka Connect 服务（无需重启 Kafka 服务）。命令中的参数解释，参见 [Running Kafka Connect](https://kafka.apache.org/documentation.html#connect_running)。
 
    1. Standalone 模式
 
