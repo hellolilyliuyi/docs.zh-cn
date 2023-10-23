@@ -26,8 +26,7 @@ StarRocks 提供  Apache Kafka®  连接器 (StarRocks Connector for Apache Kafk
 - 自建 Kafka 集群
 
   - 下载并解压压缩包 [starrocks-kafka-connector-1.0.0.tar.gz](https://releases.starrocks.io/starrocks/starrocks-kafka-connector-1.0.0.tar.gz)。
-  - 将解压后的目录复制到 Kafka 的 libs 目录中，并将包含 JAR 文件的目录路径添加到 Kafka Connect worker 配置文件的 `plugin.path` 参数中。重新启动 Kafka connect 服务（无需重启 Kafka 服务）以读取最新的 JAR 文件。
-
+  - 将解压后的目录复制到 Kafka 的 libs 目录中，并将包含 JAR 文件的目录路径添加到 Kafka Connect 集群中 worker 配置文件的 `plugin.path` 属性中。
 - Confluent cloud
 
   > **说明**
