@@ -26,7 +26,7 @@ StarRocks 提供  Apache Kafka®  连接器 (StarRocks Connector for Apache Kafk
 - 自建 Kafka 集群
 
   - 下载并解压压缩包 [starrocks-kafka-connector-1.0.0.tar.gz](https://releases.starrocks.io/starrocks/starrocks-kafka-connector-1.0.0.tar.gz)。
-  - 将解压后的目录复制到 `plugin.path` 配置项所指的路径中。`plugin.path` 是 Kafka Connect 集群 worker 节点配置文件的一个属性。
+  - 将解压后的目录复制到 `plugin.path` 属性所指的路径中。`plugin.path` 属性包含在 Kafka Connect 集群 worker 节点配置文件中。
 - Confluent cloud
 
   > **说明**
