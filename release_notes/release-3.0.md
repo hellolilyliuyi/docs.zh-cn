@@ -1,8 +1,43 @@
 # StarRocks version 3.0
 
+## 3.0.7
+
+发布日期：2023 年 10 月 18 日
+
+### 功能优化
+
+- 窗口函数 COVAR_SAMP、COVAR_POP、CORR、VARIANCE、VAR_SAMP、STD、STDDEV_SAMP 支持 ORDER BY 子句和 Window 子句。 [#30786](https://github.com/StarRocks/starrocks/pull/30786)
+- 主键模型数据写入时的 publish 过程由异步改为同步，导入作业成功返回后数据立即可见。[#27055](https://github.com/StarRocks/starrocks/pull/27055)
+- DECIMAL 类型数据查询结果越界时，返回报错而不是 NULL。[#30419](https://github.com/StarRocks/starrocks/pull/30419)
+- 执行带有不合法注释的 SQL 命令时，命令返回结果与 MySQL 保持一致。[#30210](https://github.com/StarRocks/starrocks/pull/30210)
+- 对于单个分区列的 Range 分区或者表达式分区的 StarRocks 表，SQL 语句的谓词中包含分区列的表达式也可用于分区裁剪。[#30421](https://github.com/StarRocks/starrocks/pull/30421)
+
+### 问题修复
+
+修复了如下问题：
+
+- 并发进行库和表的创建删除操作，某些情况下会引起表找不到而导致数据写入报错。[#28985](https://github.com/StarRocks/starrocks/pull/28985)
+- 某些情况下使用 UDF 会存在内存泄露。[#29467](https://github.com/StarRocks/starrocks/pull/29467) [#29465](https://github.com/StarRocks/starrocks/pull/29465)
+- ORDER BY 子句中包含聚合函数时报错“java.lang.IllegalStateException: null”。[#30108](https://github.com/StarRocks/starrocks/pull/30108)
+- 如果 Hive Catalog 是多级目录，且数据存储在腾讯云 COS 中，会导致查询结果不正确。[#30363](https://github.com/StarRocks/starrocks/pull/30363)
+- 如果 ARRAY&lt;STRUCT&gt; 类型的数据中 STRUCT 的某些子列缺失，在读取数据时因为填充默认数据长度错误会导致 BE Crash。[#30263](https://github.com/StarRocks/starrocks/pull/30263)
+- 升级 Berkeley DB Java Edition 的版本，避免安全漏洞。[#30029](https://github.com/StarRocks/starrocks/pull/30029)
+- 主键模型表导入时，如果 Truncate 操作和查询并发，在有些情况下会报错“java.lang.NullPointerException”。[#30573](https://github.com/StarRocks/starrocks/pull/30573)
+- 如果 Schema Change 执行时间过长，会因为 Tablet 版本被垃圾回收而失败。 [#31376](https://github.com/StarRocks/starrocks/pull/31376)
+- 如果表字段为 `NOT NULL` 但没有设置默认值，使用 CloudCanal 导入时会报错“Unsupported dataFormat value is : \N”。[#30799](https://github.com/StarRocks/starrocks/pull/30799)
+- 存算分离模式下，表的 Key 信息没有在 `information_schema.COLUMNS` 中记录，导致使用 Flink Connector 导入数据时 DELETE 操作无法执行。[#31458](https://github.com/StarRocks/starrocks/pull/31458)
+- 升级时如果某些列的类型也升级了（比如 Decimal 升级到 Decimal v3），某些特定特征的表在 Compaction 时会导致 BE crash。[#31626](https://github.com/StarRocks/starrocks/pull/31626)
+- 使用 Flink Connector 导入数据时，如果并发高且 HTTP 和 Scan 线程数受限，会发生卡死。[#32251](https://github.com/StarRocks/starrocks/pull/32251)
+- 调用 libcurl 时会引起 BE Crash。[#31667](https://github.com/StarRocks/starrocks/pull/31667)
+- 向主键模型表增加 BITMAP 类型的列时报错。[#31763](https://github.com/StarRocks/starrocks/pull/31763)
+
 ## 3.0.6
 
 发布日期：2023 年 9 月 12 日
+
+### 行为变更
+
+- 聚合函数 [group_concat](../sql-reference/sql-functions/string-functions/group_concat.md) 的分隔符必须使用 `SEPARATOR` 关键字声明。
 
 ### 新增特性
 
@@ -42,7 +77,7 @@
 
 - 在报错信息 `xxx too many versions xxx` 中增加了如何处理的建议说明。[#28397](https://github.com/StarRocks/starrocks/pull/28397)
 - 动态分区新增支持分区粒度为年。[#28386](https://github.com/StarRocks/starrocks/pull/28386)
-- [INSERT OVERWRITE 中使用表达式分区时](../table_design/expression_partitioning#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E8%87%B3%E5%88%86%E5%8C%BA)，分区字段大小写不敏感。[#28309](https://github.com/StarRocks/starrocks/pull/28309)
+- [INSERT OVERWRITE 中使用表达式分区时](../table_design/expression_partitioning.md#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E8%87%B3%E5%88%86%E5%8C%BA)，分区字段大小写不敏感。[#28309](https://github.com/StarRocks/starrocks/pull/28309)
 
 ### 问题修复
 

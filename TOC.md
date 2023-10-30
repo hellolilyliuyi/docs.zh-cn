@@ -68,6 +68,7 @@
   + [使用 CloudCanal 导入](/loading/CloudCanal_loading.md)
 + 导出数据
   + [使用 EXPORT 导出数据](/unloading/Export.md)
+  + [使用 INSERT INTO FILES 导出数据](/unloading/unload_using_insert_into_files.md)
   + [使用 Spark Connector 读取数据](/unloading/Spark_connector.md)
   + [使用 Flink Connector 读取数据](/unloading/Flink_connector.md)
 + 查询数据湖
@@ -120,7 +121,6 @@
   + [配置 GCS 认证信息](/integrations/authenticate_to_gcs.md)
   + BI 集成
     + [Apache Superset](/integrations/BI_integrations/Superset.md)
-    + [Dataphin](/integrations/BI_integrations/Dataphin.md)
     + [FineBI](/integrations/BI_integrations/FineBI.md)
     + [Hex](/integrations/BI_integrations/Hex.md)
     + [Metabase](/integrations/BI_integrations/Metabase.md)
@@ -129,6 +129,7 @@
     + [Tableau Desktop](/integrations/BI_integrations/Tableau_Desktop.md)
   + IDE 集成
     + [DataGrip](/integrations/IDE_integrations/DataGrip.md)
+    + [Dataphin](/integrations/IDE_integrations/Dataphin.md)
     + [DBeaver](/integrations/IDE_integrations/DBeaver.md)
   + [其他集成](/integrations/other_integrations/intro.md)
 + 管理手册
@@ -600,6 +601,7 @@
         + [json_length](/sql-reference/sql-functions/json-functions/json-query-and-processing-functions/json_length.md)
         + [json_query](/sql-reference/sql-functions/json-functions/json-query-and-processing-functions/json_query.md)
         + [json_string](/sql-reference/sql-functions/json-functions/json-query-and-processing-functions/json_string.md)
+        + [to_json](/sql-reference/sql-functions/json-functions/json-query-and-processing-functions/to_json.md)
     + Map 函数
       + [cardinality](/sql-reference/sql-functions/map-functions/cardinality.md)
       + [distinct_map_keys](/sql-reference/sql-functions/map-functions/distinct_map_keys.md)
@@ -736,6 +738,7 @@
   + [生成列](/sql-reference/sql-statements/generated_columns.md)
   + [系统变量](/reference/System_variable.md)
   + [用户自定义变量](/reference/user_defined_variables.md)
+  + [预准备语句](/sql-reference/sql-statements/prepare_statement.md)
   + [错误码](/reference/Error_code.md)
   + [系统限制](/reference/System_limit.md)
   + [AWS IAM 策略](/reference/aws_iam_policies.md)

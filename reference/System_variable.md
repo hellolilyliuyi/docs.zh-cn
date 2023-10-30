@@ -41,7 +41,7 @@ SET time_zone = "Asia/Shanghai";
 
  ```SQL
 SET GLOBAL query_mem_limit = 137438953472;
-```
+ ```
 
 以下变量仅支持全局生效，不支持设置为会话级别生效。您必须使用 `SET GLOBAL <var_name> = xxx;`，不能使用 `SET <var_name> = xxx;`，否则返回错误。
 
@@ -215,6 +215,14 @@ group-by-count-distinct 查询中为 count distinct 列设置的分桶数。该�
 
 布尔值，用于控制是否为统计信息查询启用查询队列。默认值：`false`。
 
+### enable_query_tablet_affinity（2.5 及以后）
+
+布尔值，用于控制在多次查询同一个 tablet 时是否倾向于选择固定的同一个副本。
+
+如果待查询的表中存在大量 tablet，开启该特性会对性能有提升，因为会更快的将 tablet 的元信息以及数据缓存在内存中。但是，如果查询存在一些热点 tablet，开启该特性可能会导致性能有所退化，因为该特性倾向于将一个热点 tablet 的查询调度到相同的 BE 上，在高并发的场景下无法充分利用多台 BE 的资源。
+
+默认值：`false`，表示使用原来的机制，即每次查询会从多个副本中选择一个。自 2.5.6、3.0.8、3.1.4、3.2.0 版本起，StarRocks 支持该参数。
+
 ### enable_scan_block_cache（2.5 及以后）
 
 是否开启 Data Cache 特性。该特性开启之后，StarRocks 通过将外部存储系统中的热数据缓存成多个 block，加速数据查询和分析。更多信息，参见 [Data Cache](../data_source/data_cache.md)。该特性从 2.5 版本开始支持。
@@ -349,6 +357,16 @@ Global runtime filter 开关。Runtime Filter（简称 RF）在运行时对数�
 ### lower_case_table_names (global)
 
 用于兼容 MySQL 客户端，无实际作用。StarRocks 中的表名是大小写敏感的。
+
+### materialized_view_rewrite_mode（3.2 及以后）
+
+指定异步物化视图的查询改写模式。有效值：
+
+* `disable`：禁用异步物化视图的自动查询改写。
+* `default`（默认值）：启用异步物化视图的自动查询改写，并允许优化器根据 Cost 决定是否可以使用物化视图改写查询。如果查询无法改写，则直接查询基表中的数据。
+* `default_or_error`：启用异步物化视图的自动查询改写，并允许优化器根据 Cost 决定是否可以使用物化视图改写查询。如果查询无法改写，将返回错误。
+* `force`：启用异步物化视图的自动查询改写，并且优化器优先使用物化视图改写查询。如果查询无法改写，则直接查询基表中的数据。
+* `force_or_error`：启用异步物化视图的自动查询改写，并且优化器优先使用物化视图改写查询。如果查询无法改写，将返回错误。
 
 ### max_allowed_packet
 
