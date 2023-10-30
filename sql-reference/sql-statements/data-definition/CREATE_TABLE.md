@@ -745,6 +745,7 @@ PROPERTIES (
 > **NOTE**
 >
 > * 自 3.2.0 版本起，支持该参数。
+> * StarRocks 存算分离集群不支持该参数。
 > * 如果您需要在集群范围内设置该配置，例如集群范围内关闭 fast schema evolution，则可以设置 FE 动态参数 [`fast_schema_evolution`](../../../administration/Configuration.md#fast_schema_evolution)。
 
 ## 示例
