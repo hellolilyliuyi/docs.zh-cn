@@ -740,11 +740,10 @@ PROPERTIES (
 
 #### 设置 fast schema evolution
 
-`fast_schema_evolution`: 是否开启该表的 fast schema evolution，取值：`TRUE`（默认） 或 `FALSE`。开启后增删列时可以提高 schema change 速度并降低资源使用。目前仅支持在建表时开启该属性，建表后不支持通过 [ALTER TABLE](../data-definition/ALTER_TABLE.md) 修改该属性。
+`fast_schema_evolution`: 是否开启该表的 fast schema evolution，取值：`TRUE`（默认） 或 `FALSE`。开启后增删列时可以提高 schema change 速度并降低资源使用。目前仅支持在建表时开启该属性，建表后不支持通过 [ALTER TABLE](../data-definition/ALTER_TABLE.md) 修改该属性。自 3.2.0 版本起，支持该参数。
 
 > **NOTE**
 >
-> * 自 3.2.0 版本起，支持该参数。
 > * StarRocks 存算分离集群不支持该参数。
 > * 如果您需要在集群范围内设置该配置，例如集群范围内关闭 fast schema evolution，则可以设置 FE 动态参数 [`fast_schema_evolution`](../../../administration/Configuration.md#fast_schema_evolution)。
 
